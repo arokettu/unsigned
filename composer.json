@@ -1,0 +1,16 @@
+{
+    "name": "arokettu/unsigned",
+    "type": "library",
+    "license": "MIT",
+    "config": {
+        "sort-packages": true
+    },
+    "autoload": {
+        "files": [
+            "src/lib.php"
+        ]
+    },
+    "require": {
+        "php": "^7.0 | ^8.0"
+    }
+}
