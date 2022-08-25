@@ -3,7 +3,7 @@
     "description": "Fixed length unsigned arithmetic emulation",
     "tags": ["arithmetic", "unsigned"],
     "type": "library",
-    "license": "MIT",
+    "license": "BSD-2-Clause",
     "config": {
         "sort-packages": true
     },
