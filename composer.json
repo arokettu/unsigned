@@ -1,5 +1,7 @@
 {
     "name": "arokettu/unsigned",
+    "description": "Fixed length unsigned arithmetic emulation",
+    "tags": ["arithmetic", "unsigned"],
     "type": "library",
     "license": "MIT",
     "config": {
