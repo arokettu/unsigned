@@ -47,20 +47,10 @@ class ImportExportTest extends TestCase
         self::assertEquals("\0\0\0\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff", from_int(-0x1000000, 16));
     }
 
-    public function testFromIntOverflow()
+    public function testFromIntTruncate()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('1193046 does not fit into 2 bytes');
-
-        from_int(1193046, 2);
-    }
-
-    public function testFromIntOverflowNeg()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('-6636321 does not fit into 2 bytes');
-
-        from_int(-6636321, 2);
+        self::assertEquals(1193046 & 65535, to_int(from_int(1193046, 2)));
+        self::assertEquals(-6636321 & 65535, to_int(from_int(-6636321, 2)));
     }
 
     public function testToInt()

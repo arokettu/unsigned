@@ -14,16 +14,22 @@ use Arokettu\Unsigned as u;
 function from_int(int $value, int $sizeof): string
 {
     $hex = \dechex($value);
-    // PHP_INT_SIZE and above the int will definitely fit
-    if ($sizeof < PHP_INT_SIZE) {
-        if ($value < 0) {
-            $hex = \ltrim($hex, 'f');
-        }
-        if (\strlen($hex) > $sizeof * 2) {
-            throw new \InvalidArgumentException("$value does not fit into $sizeof bytes");
-        }
+    $strlen = \strlen($hex);
+    $hexsize = $sizeof * 2;
+
+    switch ($strlen <=> $sizeof * 2) {
+        case -1:
+            // pad according to sign
+            $hex = \str_pad($hex, $hexsize, $value >= 0 ? '0' : 'f', STR_PAD_LEFT);
+            break;
+
+        case 1:
+            // truncate
+            $hex = substr($hex, -$hexsize);
+
+        default:
+            // nothing
     }
-    $hex = \str_pad($hex, $sizeof * 2, $value >= 0 ? '0' : 'f', STR_PAD_LEFT);
 
     return \strrev(\hex2bin($hex));
 }
