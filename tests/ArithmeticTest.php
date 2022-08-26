@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use function Arokettu\Unsigned\add;
 use function Arokettu\Unsigned\from_int;
 use function Arokettu\Unsigned\mul;
+use function Arokettu\Unsigned\sub;
 use function Arokettu\Unsigned\to_int;
 
 class ArithmeticTest extends TestCase
@@ -33,6 +34,28 @@ class ArithmeticTest extends TestCase
         $this->expectExceptionMessage('Arguments must be the same size, 1 and 2 bytes given');
 
         add("\0", "\0\0");
+    }
+
+    public function testSub()
+    {
+        // normal
+        self::assertEquals(
+            654321 - 123456,
+            to_int(sub(from_int(654321, PHP_INT_SIZE), from_int(123456, PHP_INT_SIZE)))
+        );
+        // overflow
+        self::assertEquals(
+            (123456 - 654321) & PHP_INT_MAX >> 7,
+            to_int(sub(from_int(123456, PHP_INT_SIZE - 1), from_int(654321, PHP_INT_SIZE - 1)))
+        );
+    }
+
+    public function testSubDifferentSizes()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Arguments must be the same size, 1 and 2 bytes given');
+
+        sub("\0", "\0\0");
     }
 
     public function testMul()

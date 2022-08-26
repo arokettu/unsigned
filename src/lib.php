@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Arokettu\Unsigned;
 
+use Arokettu\Unsigned as u;
+
 function from_int(int $value, int $sizeof): string
 {
     $hex = \dechex($value);
@@ -122,6 +124,9 @@ function shift_right(string $value, int $shift): string
     return \substr($value, 1);
 }
 
+/**
+ * a + b
+ */
 function add(string $a, string $b): string
 {
     $sizeof = \strlen($a);
@@ -140,6 +145,17 @@ function add(string $a, string $b): string
     return $a;
 }
 
+/**
+ * a - b
+ */
+function sub(string $a, string $b): string
+{
+    return u\add(u\add($a, ~$b), "\x01" . \str_repeat("\0", \strlen($a) - 1));
+}
+
+/**
+ * a * b
+ */
 function mul(string $a, string $b): string
 {
     $sizeof = \strlen($a);
