@@ -17,7 +17,7 @@ function from_int(int $value, int $sizeof): string
     $strlen = \strlen($hex);
     $hexsize = $sizeof * 2;
 
-    switch ($strlen <=> $sizeof * 2) {
+    switch ($strlen <=> $hexsize) {
         case -1:
             // pad according to sign
             $hex = \str_pad($hex, $hexsize, $value >= 0 ? '0' : 'f', STR_PAD_LEFT);
@@ -25,7 +25,8 @@ function from_int(int $value, int $sizeof): string
 
         case 1:
             // truncate
-            $hex = substr($hex, -$hexsize);
+            $hex = \substr($hex, -$hexsize);
+            break;
 
         default:
             // nothing
@@ -50,10 +51,24 @@ function to_int(string $value): int
 
 function from_hex(string $value, int $sizeof): string
 {
-    if (\strlen($value) !== $sizeof * 2) {
-        $s = $sizeof * 2;
-        throw new \InvalidArgumentException("Hex value for \$sizeof == $sizeof must be $s chars long");
+    $strlen = \strlen($value);
+    $hexsize = $sizeof * 2;
+
+    switch ($strlen <=> $hexsize) {
+        case -1:
+            // pad with zeros
+            $value = \str_pad($value, $hexsize, '0', STR_PAD_LEFT);
+            break;
+
+        case 1:
+            // truncate
+            $value = \substr($value, -$hexsize);
+            break;
+
+        default:
+            // nothing
     }
+
     return \strrev(\hex2bin($value));
 }
 

@@ -80,15 +80,14 @@ class ImportExportTest extends TestCase
 
     public function testFromHex()
     {
-        self::assertEquals(0x0123, to_int(from_hex('0123', 2)));
-    }
-
-    public function testFromInvalidLength()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Hex value for $sizeof == 3 must be 6 chars long');
-
-        from_hex('0123', 3);
+        // exact
+        self::assertEquals("\x23\x01", from_hex('0123', 2));
+        // truncate
+        self::assertEquals("\x23", from_hex('0123', 1));
+        // pad
+        self::assertEquals("\x23\x01\x00", from_hex('0123', 3));
+        // odd number of digits is acceptable too!
+        self::assertEquals("\x23\x01\x00\x00", from_hex('123', 4));
     }
 
     public function testToHex()
