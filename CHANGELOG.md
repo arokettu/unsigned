@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.1
+
+*Aug 26, 2022*
+
+* Relax from_* methods: truncate values instead of raising exceptions
+
 ## 0.2.0
 
 *Aug 26, 2022*
