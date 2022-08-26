@@ -1,6 +1,9 @@
 <?php
 
-/** @noinspection DuplicatedCode */
+/**
+ * @noinspection DuplicatedCode
+ * @noinspection PhpFullyQualifiedNameUsageInspection
+ */
 
 declare(strict_types=1);
 
@@ -9,14 +12,17 @@ namespace Arokettu\Unsigned;
 function from_int(int $value, int $sizeof): string
 {
     $hex = \dechex($value);
-    if (\strlen($hex) > $sizeof * 2) {
-        throw new \InvalidArgumentException("$value does not fit into $sizeof bytes");
+    // PHP_INT_SIZE and above the int will definitely fit
+    if ($sizeof < PHP_INT_SIZE) {
+        if ($value < 0) {
+            $hex = \ltrim($hex, 'f');
+        }
+        if (\strlen($hex) > $sizeof * 2) {
+            throw new \InvalidArgumentException("$value does not fit into $sizeof bytes");
+        }
     }
     $hex = \str_pad($hex, $sizeof * 2, $value >= 0 ? '0' : 'f', STR_PAD_LEFT);
 
-    if (\strlen($hex) % 2 === 1) {
-        $hex = '0' . $hex;
-    }
     return \strrev(\hex2bin($hex));
 }
 
