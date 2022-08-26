@@ -61,7 +61,7 @@ function shift_left(string $value, int $shift): string
 {
     $sizeof = \strlen($value);
 
-    if ($shift < -1) {
+    if ($shift < 0) {
         throw new \InvalidArgumentException('$shift must be non negative');
     }
     if ($shift >= $sizeof * 8) {
@@ -77,7 +77,7 @@ function shift_left(string $value, int $shift): string
     }
 
     $carry = 0;
-    for ($i = 0; $i < $sizeof; ++$i) {
+    for ($i = 0; $i < $sizeof; $i++) {
         $newChr = \ord($value[$i]) << $shift | $carry;
         $value[$i] = \chr($newChr);
         $carry = \intdiv($newChr, 256);
@@ -93,7 +93,7 @@ function shift_right(string $value, int $shift): string
 {
     $sizeof = \strlen($value);
 
-    if ($shift < -1) {
+    if ($shift < 0) {
         throw new \InvalidArgumentException('$shift must be non negative');
     }
     if ($shift >= $sizeof * 8) {
@@ -111,7 +111,7 @@ function shift_right(string $value, int $shift): string
     // shift left 8 - $shift bits, then remove the least significant byte
     $carry = 0;
     $shift = 8 - $shift;
-    for ($i = 0; $i < $sizeof; ++$i) {
+    for ($i = 0; $i < $sizeof; $i++) {
         $newChr = \ord($value[$i]) << $shift | $carry;
         $value[$i] = \chr($newChr);
         $carry = \intdiv($newChr, 256);
