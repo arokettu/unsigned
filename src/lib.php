@@ -10,7 +10,7 @@ function from_int(int $value, int $sizeof): string
     if (\strlen($hex) > $sizeof * 2) {
         throw new \InvalidArgumentException("$value does not fit into $sizeof bytes");
     }
-    $hex = str_pad($hex, $sizeof * 2, $value > 0 ? '0' : 'f', STR_PAD_LEFT);
+    $hex = str_pad($hex, $sizeof * 2, $value >= 0 ? '0' : 'f', STR_PAD_LEFT);
 
     if (\strlen($hex) % 2 === 1) {
         $hex = '0' . $hex;
