@@ -6,7 +6,10 @@ namespace Arokettu\Unsigned\Tests;
 
 use PHPUnit\Framework\TestCase;
 
+use function Arokettu\Unsigned\from_hex;
 use function Arokettu\Unsigned\from_int;
+use function Arokettu\Unsigned\to_hex;
+use function Arokettu\Unsigned\to_int;
 
 class ImportExportTest extends TestCase
 {
@@ -58,5 +61,48 @@ class ImportExportTest extends TestCase
         $this->expectExceptionMessage('-6636321 does not fit into 2 bytes');
 
         from_int(-6636321, 2);
+    }
+
+    public function testToInt()
+    {
+        self::assertEquals(0x123, to_int("\x23\x01"));
+        self::assertEquals(PHP_INT_MAX, to_int(from_int(PHP_INT_MAX, PHP_INT_SIZE)));
+        // negative of lower size than PHP_INT
+        self::assertEquals(-1 & PHP_INT_MAX >> 7, to_int(from_int(-1, PHP_INT_SIZE - 1)));
+    }
+
+    public function testToIntTooBig()
+    {
+        $this->expectException(\RangeException::class);
+        $this->expectExceptionMessage('The value is larger than PHP integer');
+
+        to_int(str_repeat("\xff", PHP_INT_SIZE + 1));
+    }
+
+    public function testToIntTooBigNeg()
+    {
+        $this->expectException(\RangeException::class);
+        $this->expectExceptionMessage('The value is larger than PHP integer');
+
+        // negative of equal or greater size than PHP_INT
+        to_int(from_int(-1, PHP_INT_SIZE));
+    }
+
+    public function testFromHex()
+    {
+        self::assertEquals(0x0123, to_int(from_hex('0123', 2)));
+    }
+
+    public function testFromInvalidLength()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Hex value for $sizeof == 3 must be 6 chars long');
+
+        from_hex('0123', 3);
+    }
+
+    public function testToHex()
+    {
+        self::assertEquals('000123', to_hex(from_int(0x123, 3)));
     }
 }

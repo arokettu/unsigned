@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Arokettu\Unsigned\Tests;
 
 use PHPUnit\Framework\TestCase;
+
 use function Arokettu\Unsigned\from_int;
 use function Arokettu\Unsigned\shift_left;
 use function Arokettu\Unsigned\shift_right;
