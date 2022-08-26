@@ -1,4 +1,6 @@
 /.idea
 /vendor
 /composer.lock
-/test*.php
+/debug
+/reports
+/.phpunit.result.cache
