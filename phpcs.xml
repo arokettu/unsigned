@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+    @see https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-Ruleset
+-->
+<ruleset name="Custom Standard" namespace="MyProject\CS\Standard">
+    <rule ref="SandFox_PHP70"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions">
+        <properties>
+            <!-- Reset to default (include all functions) -->
+            <property name="includeSpecialFunctions" value="0"/>
+        </properties>
+    </rule>
+    <config name="testVersion" value="7.0-"/>
+    <file>src</file>
+    <file>tests</file>
+</ruleset>

@@ -5,6 +5,9 @@
     "type": "library",
     "license": "BSD-2-Clause",
     "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
         "sort-packages": true
     },
     "autoload": {
@@ -14,5 +17,10 @@
     },
     "require": {
         "php": "^7.0 | ^8.0"
+    },
+    "require-dev": {
+        "psy/psysh": "*",
+        "sandfox.dev/code-standard": "^10@dev",
+        "squizlabs/php_codesniffer": "*"
     }
 }
