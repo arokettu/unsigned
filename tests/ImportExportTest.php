@@ -66,7 +66,7 @@ class ImportExportTest extends TestCase
         $this->expectException(\RangeException::class);
         $this->expectExceptionMessage('The value is larger than PHP integer');
 
-        to_int(str_repeat("\xff", PHP_INT_SIZE + 1));
+        to_int(\str_repeat("\xff", PHP_INT_SIZE + 1));
     }
 
     public function testToIntTooBigNeg()

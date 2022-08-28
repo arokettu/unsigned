@@ -9,6 +9,7 @@ use PHPUnit\Framework\TestCase;
 use function Arokettu\Unsigned\add;
 use function Arokettu\Unsigned\from_int;
 use function Arokettu\Unsigned\mul;
+use function Arokettu\Unsigned\neg;
 use function Arokettu\Unsigned\sub;
 use function Arokettu\Unsigned\to_int;
 
@@ -47,6 +48,25 @@ class ArithmeticTest extends TestCase
         self::assertEquals(
             (123456 - 654321) & PHP_INT_MAX >> 7,
             to_int(sub(from_int(123456, PHP_INT_SIZE - 1), from_int(654321, PHP_INT_SIZE - 1)))
+        );
+    }
+
+    public function testNeg()
+    {
+        // something that converts to int
+        self::assertEquals(
+            123,
+            to_int(neg(from_int(-123, PHP_INT_SIZE)))
+        );
+        // 0
+        self::assertEquals(
+            0,
+            to_int(neg(from_int(0, PHP_INT_SIZE)))
+        );
+        // small size
+        self::assertEquals(
+            255,
+            to_int(neg(from_int(1, 1)))
         );
     }
 

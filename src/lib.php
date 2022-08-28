@@ -173,7 +173,7 @@ function add(string $a, string $b): string
 }
 
 /**
- * a + b
+ * a + int(b)
  */
 function add_int(string $a, int $b): string
 {
@@ -184,7 +184,7 @@ function add_int(string $a, int $b): string
     }
     if ($b < 0) {
         // fall back to slower algorithm
-        return add($a, from_int($b, $sizeof));
+        return u\add($a, u\from_int($b, $sizeof));
     }
 
     $carry = $b;
@@ -193,9 +193,9 @@ function add_int(string $a, int $b): string
             break;
         }
         $newChr = \ord($a[$i]) + $carry;
-        if (is_float($newChr)) {
+        if (\is_float($newChr)) {
             // overflow, fall back to slower algorithm
-            return add($a, from_int($b, $sizeof));
+            return u\add($a, u\from_int($b, $sizeof));
         }
         $a[$i] = \chr($newChr);
         $carry = \intdiv($newChr, 256);
@@ -209,7 +209,35 @@ function add_int(string $a, int $b): string
  */
 function sub(string $a, string $b): string
 {
-    return u\add_int(u\add($a, ~$b), 1);
+    return u\add($a, u\neg($b));
+}
+
+/**
+ * a - int(b)
+ */
+function sub_int(string $a, int $b): string
+{
+    // handle overflow on negative
+    if ($b === PHP_INT_MIN) {
+        return u\sub($a, u\from_int(PHP_INT_MIN, \strlen($a)));
+    }
+    return u\add_int($a, -$b); // mostly syntax sugar, will likely go for a slow algo
+}
+
+/**
+ * int(a) - b
+ */
+function sub_int_rev(int $a, string $b): string
+{
+    return u\add_int(u\neg($b), $a);
+}
+
+/**
+ * -a
+ */
+function neg(string $a): string
+{
+    return u\add_int(~$a, 1);
 }
 
 /**
