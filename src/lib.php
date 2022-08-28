@@ -28,8 +28,11 @@ function from_int(int $value, int $sizeof): string
             $hex = \substr($hex, -$hexsize);
             break;
 
+        // @codeCoverageIgnoreStart
+        // coverage bug?
         default:
             // nothing
+        // @codeCoverageIgnoreEnd
     }
 
     return \strrev(\hex2bin($hex));
@@ -65,8 +68,11 @@ function from_hex(string $value, int $sizeof): string
             $value = \substr($value, -$hexsize);
             break;
 
+        // @codeCoverageIgnoreStart
+        // coverage bug?
         default:
             // nothing
+        // @codeCoverageIgnoreEnd
     }
 
     return \strrev(\hex2bin($value));
@@ -167,11 +173,43 @@ function add(string $a, string $b): string
 }
 
 /**
+ * a + b
+ */
+function add_int(string $a, int $b): string
+{
+    $sizeof = \strlen($a);
+
+    if ($b === 0) {
+        return $a;
+    }
+    if ($b < 0) {
+        // fall back to slower algorithm
+        return add($a, from_int($b, $sizeof));
+    }
+
+    $carry = $b;
+    for ($i = 0; $i < $sizeof; ++$i) {
+        if ($carry === 0) {
+            break;
+        }
+        $newChr = \ord($a[$i]) + $carry;
+        if (is_float($newChr)) {
+            // overflow, fall back to slower algorithm
+            return add($a, from_int($b, $sizeof));
+        }
+        $a[$i] = \chr($newChr);
+        $carry = \intdiv($newChr, 256);
+    }
+
+    return $a;
+}
+
+/**
  * a - b
  */
 function sub(string $a, string $b): string
 {
-    return u\add(u\add($a, ~$b), "\x01" . \str_repeat("\0", \strlen($a) - 1));
+    return u\add_int(u\add($a, ~$b), 1);
 }
 
 /**
