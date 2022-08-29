@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0
+
+*Aug 29, 2022*
+
+* New functions:
+  * add_int(string, int)
+  * sub_int(string, int)
+  * sub_int_rev(int, string)
+  * neg(string)
+  * mul_int(string, int)
+
 ## 0.2.1
 
 *Aug 26, 2022*
