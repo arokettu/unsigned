@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Arokettu\Unsigned\add;
 use function Arokettu\Unsigned\from_int;
+use function Arokettu\Unsigned\mod;
 use function Arokettu\Unsigned\mul;
 use function Arokettu\Unsigned\neg;
 use function Arokettu\Unsigned\sub;
@@ -113,5 +114,30 @@ class ArithmeticTest extends TestCase
         $this->expectExceptionMessage('Arguments must be the same size, 1 and 2 bytes given');
 
         mul("\0", "\0\0");
+    }
+
+    public function testMod()
+    {
+//        self::assertEquals(123456 % 1000, to_int(mod(from_int(123456, 8), from_int(1000, 8)))));
+        self::assertEquals(123456 % 1, to_int(mod(from_int(123456, 8), from_int(1, 8))));
+        self::assertEquals(123456 % 1024, to_int(mod(from_int(123456, 8), from_int(1024, 8))));
+        // negative is accepted
+        // self::assertEquals(...?, to_int(mod(from_int(123456, 8), from_int(-1000, 8)))));
+    }
+
+    public function testModNoZero()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Modulo by zero');
+
+        mod(from_int(123456, 8), from_int(0, 8));
+    }
+
+    public function testModDifferentSizes()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Arguments must be the same size, 1 and 2 bytes given');
+
+        mod("\0", "\0\0");
     }
 }

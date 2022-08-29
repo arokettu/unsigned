@@ -305,6 +305,36 @@ function mul_int(string $a, int $b): string
 }
 
 /**
+ * a % b
+ */
+function mod(string $a, string $b): string
+{
+    $sizeof = \strlen($a);
+    $sizeofb = \strlen($b);
+    if ($sizeof !== $sizeofb) {
+        throw new \InvalidArgumentException("Arguments must be the same size, $sizeof and $sizeofb bytes given");
+    }
+
+    // special cases
+    $zero = \str_repeat("\0", $sizeof);
+    if ($b === $zero) {
+        throw new \InvalidArgumentException('Modulo by zero');
+    }
+    $one = $zero;
+    $one[0] = "\1";
+    if ($b === $one) {
+        return $zero;
+    }
+    // for pow2 just cut the required bits
+    $b1 = u\add_int($b, -1);
+    if (($b & $b1) === $zero) {
+        return $a & $b1;
+    }
+
+    throw new \LogicException('Not implemented');
+}
+
+/**
  * a % int(b) -> int
  */
 function mod_int(string $a, int $b): int
