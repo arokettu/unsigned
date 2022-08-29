@@ -97,8 +97,8 @@ function shift_left(string $value, int $shift): string
         return \str_repeat("\0", $sizeof);
     }
     if ($shift >= 8) {
-        $easyShift = \intdiv($shift, 8);
-        $shift = $shift % 8;
+        $easyShift = $shift >> 3; // div 8
+        $shift = $shift & 7; // mod 8
         $value = \str_repeat("\0", $easyShift) . \substr($value, 0, $sizeof - $easyShift);
     }
     if ($shift === 0) {
@@ -109,7 +109,7 @@ function shift_left(string $value, int $shift): string
     for ($i = 0; $i < $sizeof; $i++) {
         $newChr = \ord($value[$i]) << $shift | $carry;
         $value[$i] = \chr($newChr);
-        $carry = \intdiv($newChr, 256);
+        $carry = $newChr >> 8;
     }
 
     return $value;
@@ -129,8 +129,8 @@ function shift_right(string $value, int $shift): string
         return \str_repeat("\0", $sizeof);
     }
     if ($shift >= 8) {
-        $easyShift = \intdiv($shift, 8);
-        $shift = $shift % 8;
+        $easyShift = $shift >> 3; // div 8
+        $shift = $shift & 7; // mod 8
         $value = \substr($value, $easyShift) . \str_repeat("\0", $easyShift);
     }
     if ($shift === 0) {
@@ -143,7 +143,7 @@ function shift_right(string $value, int $shift): string
     for ($i = 0; $i < $sizeof; $i++) {
         $newChr = \ord($value[$i]) << $shift | $carry;
         $value[$i] = \chr($newChr);
-        $carry = \intdiv($newChr, 256);
+        $carry = $newChr >> 8;
     }
 
     $value[$i] = \chr($carry);
@@ -166,7 +166,7 @@ function add(string $a, string $b): string
     for ($i = 0; $i < $sizeof; ++$i) {
         $newChr = \ord($a[$i]) + \ord($b[$i]) + $carry;
         $a[$i] = \chr($newChr);
-        $carry = \intdiv($newChr, 256);
+        $carry = $newChr >> 8;
     }
 
     return $a;
@@ -182,10 +182,6 @@ function add_int(string $a, int $b): string
     if ($b === 0) {
         return $a;
     }
-    if ($b < 0) {
-        // fall back to slower algorithm
-        return u\add($a, u\from_int($b, $sizeof));
-    }
 
     $carry = $b;
     for ($i = 0; $i < $sizeof; ++$i) {
@@ -198,7 +194,7 @@ function add_int(string $a, int $b): string
             return u\add($a, u\from_int($b, $sizeof));
         }
         $a[$i] = \chr($newChr);
-        $carry = \intdiv($newChr, 256);
+        $carry = $newChr >> 8;
     }
 
     return $a;
@@ -221,7 +217,7 @@ function sub_int(string $a, int $b): string
     if ($b === PHP_INT_MIN) {
         return u\sub($a, u\from_int(PHP_INT_MIN, \strlen($a)));
     }
-    return u\add_int($a, -$b); // mostly syntax sugar, will likely go for a slow algo
+    return u\add_int($a, -$b);
 }
 
 /**
@@ -261,7 +257,7 @@ function mul(string $a, string $b): string
 
             $newChr = $ord * \ord($b[$j]) + \ord($newval[$idx]) + $carry;
             $newval[$idx] = \chr($newChr);
-            $carry = \intdiv($newChr, 256);
+            $carry = $newChr >> 8;
         }
     }
 
@@ -302,7 +298,7 @@ function mul_int(string $a, int $b): string
             return u\mul($a, u\from_int($b, $sizeof));
         }
         $a[$i] = \chr($newChr);
-        $carry = \intdiv($newChr, 256);
+        $carry = $newChr >> 8;
     }
 
     return $a;
