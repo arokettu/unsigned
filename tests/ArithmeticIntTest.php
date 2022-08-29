@@ -92,7 +92,7 @@ class ArithmeticIntTest extends TestCase
         // overflow
         self::assertEquals(
             (11111 * 11111) & 65535,
-            to_int(mul_int(from_int(11111, 2), 11111 ))
+            to_int(mul_int(from_int(11111, 2), 11111))
         );
         // 0
         self::assertEquals(
