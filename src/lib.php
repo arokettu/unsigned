@@ -27,12 +27,6 @@ function from_int(int $value, int $sizeof): string
             // truncate
             $hex = \substr($hex, -$hexsize);
             break;
-
-        // @codeCoverageIgnoreStart
-        // coverage bug?
-        default:
-            // nothing
-        // @codeCoverageIgnoreEnd
     }
 
     return \strrev(\hex2bin($hex));
@@ -67,12 +61,6 @@ function from_hex(string $value, int $sizeof): string
             // truncate
             $value = \substr($value, -$hexsize);
             break;
-
-        // @codeCoverageIgnoreStart
-        // coverage bug?
-        default:
-            // nothing
-        // @codeCoverageIgnoreEnd
     }
 
     return \strrev(\hex2bin($value));
