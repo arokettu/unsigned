@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Arokettu\Unsigned\add_int;
 use function Arokettu\Unsigned\from_int;
+use function Arokettu\Unsigned\mod_int;
 use function Arokettu\Unsigned\mul_int;
 use function Arokettu\Unsigned\sub_int;
 use function Arokettu\Unsigned\sub_int_rev;
@@ -124,5 +125,28 @@ class ArithmeticIntTest extends TestCase
             65413,
             to_int(mul_int(from_int(123, 2), PHP_INT_MAX))
         );
+    }
+
+    public function testMod()
+    {
+        self::assertEquals(123456 % 1000, mod_int(from_int(123456, 8), 1000));
+        self::assertEquals(123456 % 1, mod_int(from_int(123456, 8), 1));
+        self::assertEquals(123456 % 1024, mod_int(from_int(123456, 8), 1024));
+    }
+
+    public function testModNoZero()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Modulo by zero');
+
+        mod_int(from_int(123456, 8), 0);
+    }
+
+    public function testModNoNeg()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('$b must be greater than zero. Use mod($a, from_int($b)) for unsigned logic');
+
+        mod_int(from_int(123456, 8), -2);
     }
 }
