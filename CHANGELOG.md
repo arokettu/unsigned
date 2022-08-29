@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.1
+
+*Aug 30, 2022*
+
+* Fixed invalid mod length
+
 ## 0.4.0
 
 *Aug 29, 2022*
