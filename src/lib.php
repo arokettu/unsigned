@@ -400,3 +400,58 @@ function compare(string $a, string $b): int
     }
     return 0;
 }
+
+function set_bit(string $a, int $bit): string
+{
+    $sizeof = \strlen($a);
+    if ($bit < 0) {
+        throw new \UnderflowException("Bit must be in range 0-" . ($sizeof * 8 - 1));
+    }
+    if ($bit > $sizeof * 8) {
+        throw new \OverflowException("Bit must be in range 0-" . ($sizeof * 8 - 1));
+    }
+
+    $byte = $bit >> 3;
+    $bit &= 7;
+    $bitmask = 1 << $bit;
+
+    $a[$byte] = \chr(\ord($a[$byte]) | $bitmask);
+
+    return $a;
+}
+
+function unset_bit(string $a, int $bit): string
+{
+    $sizeof = \strlen($a);
+    if ($bit < 0) {
+        throw new \UnderflowException("Bit must be in range 0-" . ($sizeof * 8 - 1));
+    }
+    if ($bit > $sizeof * 8) {
+        throw new \OverflowException("Bit must be in range 0-" . ($sizeof * 8 - 1));
+    }
+
+    $byte = $bit >> 3;
+    $bit &= 7;
+    $bitmask = 1 << $bit;
+
+    $a[$byte] = \chr(\ord($a[$byte]) & ~$bitmask);
+
+    return $a;
+}
+
+function is_bit_set(string $a, int $bit): bool
+{
+    $sizeof = \strlen($a);
+    if ($bit < 0) {
+        throw new \UnderflowException("Bit must be in range 0-" . ($sizeof * 8 - 1));
+    }
+    if ($bit > $sizeof * 8) {
+        throw new \OverflowException("Bit must be in range 0-" . ($sizeof * 8 - 1));
+    }
+
+    $byte = $bit >> 3;
+    $bit &= 7;
+    $bitmask = 1 << $bit;
+
+    return (\ord($a[$byte]) & $bitmask) > 1;
+}
