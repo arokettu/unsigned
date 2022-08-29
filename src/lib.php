@@ -338,3 +338,24 @@ function mod_int(string $a, int $b): int
 
     return $mod;
 }
+
+/**
+ * a <=> b
+ */
+function compare(string $a, string $b): int
+{
+    $sizeof = \strlen($a);
+    $sizeofb = \strlen($b);
+    if ($sizeof !== $sizeofb) {
+        throw new \InvalidArgumentException("Arguments must be the same size, $sizeof and $sizeofb bytes given");
+    }
+
+    $i = $sizeof;
+    while ($i--) {
+        $compare = $a[$i] <=> $b[$i];
+        if ($compare !== 0) {
+            return $compare;
+        }
+    }
+    return 0;
+}
