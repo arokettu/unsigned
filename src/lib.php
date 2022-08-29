@@ -359,7 +359,7 @@ function div_mod(string $a, string $b): array
         $m = \substr($m, 0, $sizeofFrame);
     }
 
-    return [$r, $m];
+    return [$r, \str_pad($m, $sizeof, "\0")];
 }
 
 /**

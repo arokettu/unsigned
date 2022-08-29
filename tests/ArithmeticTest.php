@@ -174,6 +174,10 @@ class ArithmeticTest extends TestCase
             0x4f423f23 % 0x1257ac45,
             to_int(mod(from_int(0x4f423f23, 8), from_int(0x1257ac45, 8)))
         );
+
+        // verify length
+        self::assertEquals(8, \strlen(mod(from_int(0x4f423f23, 8), from_int(0x45, 8))));
+        self::assertEquals(8, \strlen(mod(from_int(0x4f423f23, 8), from_int(0x1257ac45, 8))));
     }
 
     public function testModNoZero()
