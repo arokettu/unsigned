@@ -120,13 +120,23 @@ class ArithmeticTest extends TestCase
 
     public function testDiv()
     {
-//        self::assertEquals(123456 % 1000, to_int(mod(from_int(123456, 8), from_int(1000, 8)))));
+        self::assertEquals(\intdiv(123456, 1000), to_int(div(from_int(123456, 8), from_int(1000, 8))));
         self::assertEquals(\intdiv(123456, 1), to_int(div(from_int(123456, 8), from_int(1, 8))));
         self::assertEquals(\intdiv(123456, 1024), to_int(div(from_int(123456, 8), from_int(1024, 8))));
         self::assertEquals(\intdiv(123456, 654321), to_int(div(from_int(123456, 8), from_int(654321, 8))));
         self::assertEquals(\intdiv(123456, 123456), to_int(div(from_int(123456, 8), from_int(123456, 8))));
         // negative is accepted
-        // self::assertEquals(...?, to_int(mod(from_int(123456, 8), from_int(-1000, 8)))));
+         self::assertEquals(0, to_int(div(from_int(123456, 8), from_int(-1000, 8))));
+        // 4 bytes by 1 byte
+        self::assertEquals(
+            \intdiv(0x4f423f23, 0x45),
+            to_int(div(from_int(0x4f423f23, 8), from_int(0x45, 8)))
+        );
+        // 4 bytes by 4 bytes
+        self::assertEquals(
+            \intdiv(0x4f423f23, 0x1257ac45),
+            to_int(div(from_int(0x4f423f23, 8), from_int(0x1257ac45, 8)))
+        );
     }
 
     public function testDivDifferentSizes()
@@ -147,13 +157,23 @@ class ArithmeticTest extends TestCase
 
     public function testMod()
     {
-//        self::assertEquals(123456 % 1000, to_int(mod(from_int(123456, 8), from_int(1000, 8)))));
+        self::assertEquals(123456 % 1000, to_int(mod(from_int(123456, 8), from_int(1000, 8))));
         self::assertEquals(123456 % 1, to_int(mod(from_int(123456, 8), from_int(1, 8))));
         self::assertEquals(123456 % 1024, to_int(mod(from_int(123456, 8), from_int(1024, 8))));
         self::assertEquals(123456 % 654321, to_int(mod(from_int(123456, 8), from_int(654321, 8))));
         self::assertEquals(123456 % 123456, to_int(mod(from_int(123456, 8), from_int(123456, 8))));
         // negative is accepted
-        // self::assertEquals(...?, to_int(mod(from_int(123456, 8), from_int(-1000, 8)))));
+        self::assertEquals(123456, to_int(mod(from_int(123456, 8), from_int(-1000, 8))));
+        // 4 bytes by 1 byte
+        self::assertEquals(
+            0x4f423f23 % 0x45,
+            to_int(mod(from_int(0x4f423f23, 8), from_int(0x45, 8)))
+        );
+        // 4 bytes by 4 bytes
+        self::assertEquals(
+            0x4f423f23 % 0x1257ac45,
+            to_int(mod(from_int(0x4f423f23, 8), from_int(0x1257ac45, 8)))
+        );
     }
 
     public function testModNoZero()

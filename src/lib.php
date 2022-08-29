@@ -351,7 +351,27 @@ function div_mod(string $a, string $b): array
         ];
     }
 
-    throw new \LogicException('Not implemented');
+    $b = \rtrim($b, "\0"); // only significant bytes
+    $bZero = $b . "\0";
+    $bAdd = u\neg($bZero);
+    $sizeofFrame = \strlen($b);
+
+    $r = $zero;
+    $m = $sizeofFrame === $sizeof ? $zero : \str_repeat("\0", $sizeofFrame);
+
+    $i = $sizeof;
+    while ($i--) {
+        $m = $a[$i] . $m;
+        $chr = 0;
+        while (u\compare($m, $bZero) > 0) {
+            $m = u\add($m, $bAdd);
+            $chr++;
+        }
+        $r[$i] = \chr($chr);
+        $m = \substr($m, 0, $sizeofFrame);
+    }
+
+    return [$r, $m];
 }
 
 /**
@@ -461,7 +481,8 @@ function mod(string $a, string $b): string
         return $a & $b1;
     }
 
-    throw new \LogicException('Not implemented');
+    // do a slow algo
+    return u\div_mod($a, $b)[1];
 }
 
 /**
