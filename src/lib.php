@@ -305,6 +305,67 @@ function mul_int(string $a, int $b): string
 }
 
 /**
+ * a / int(b), a % int(b)
+ *
+ * @return array [div -> string, mod -> int]
+ */
+function div_mod_int(string $a, int $b): array
+{
+    $sizeof = \strlen($a);
+
+    // special cases
+    if ($b === 0) {
+        throw new \InvalidArgumentException('Division by zero');
+    }
+    if ($b === 1) {
+        return [$a, 0];
+    }
+    // for pow2 just cut the required bits
+    if (($b & ($b - 1)) === 0) {
+        $i = 0;
+        while (1 << $i !== $b) {
+            $i++;
+        }
+        return [
+            u\shift_right($a, $i),
+            u\to_int($a & u\from_int($b - 1, $sizeof)),
+        ];
+    }
+    // can't handle negative, convert to unsigned first
+    if ($b < 0) {
+        throw new \InvalidArgumentException(
+            '$b must be greater than zero. Use div_mod($a, from_int($b)) for unsigned logic'
+        );
+    }
+
+    $mod = 0;
+    $i = $sizeof;
+    while ($i--) {
+        $dividend = $mod << 8 | \ord($a[$i]);
+        $a[$i] = \chr(\intdiv($dividend, $b));
+        $mod = $dividend % $b;
+    }
+
+    return [$a, $mod];
+}
+
+/**
+ * a / int(b)
+ */
+function div_int(string $a, int $b): string
+{
+    // can't handle negative, convert to unsigned first
+    // custom message
+    if ($b < 0) {
+        throw new \InvalidArgumentException(
+            '$b must be greater than zero. Use div($a, from_int($b)) for unsigned logic'
+        );
+    }
+
+    return u\div_mod_int($a, $b)[0];
+}
+
+/**
  * a % b
  */
 function mod(string $a, string $b): string
@@ -373,8 +434,7 @@ function mod_int(string $a, int $b): int
     $mod = 0;
     $i = $sizeof;
     while ($i--) {
-        $mod = $mod << 8;
-        $mod = ($mod | \ord($a[$i]) % $b) % $b;
+        $mod = ($mod << 8 | \ord($a[$i])) % $b;
     }
 
     return $mod;

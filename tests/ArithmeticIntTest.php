@@ -7,6 +7,8 @@ namespace Arokettu\Unsigned\Tests;
 use PHPUnit\Framework\TestCase;
 
 use function Arokettu\Unsigned\add_int;
+use function Arokettu\Unsigned\div_int;
+use function Arokettu\Unsigned\div_mod_int;
 use function Arokettu\Unsigned\from_int;
 use function Arokettu\Unsigned\mod_int;
 use function Arokettu\Unsigned\mul_int;
@@ -127,6 +129,31 @@ class ArithmeticIntTest extends TestCase
         );
     }
 
+    public function testDiv()
+    {
+        self::assertEquals(\intdiv(123456, 1000), to_int(div_int(from_int(123456, 8), 1000)));
+        self::assertEquals(\intdiv(123456, 1), to_int(div_int(from_int(123456, 8), 1)));
+        self::assertEquals(\intdiv(123456, 1024), to_int(div_int(from_int(123456, 8), 1024)));
+        self::assertEquals(\intdiv(123456, 654321), to_int(div_int(from_int(123456, 8), 654321)));
+        self::assertEquals(\intdiv(123456, 123456), to_int(div_int(from_int(123456, 8), 123456)));
+    }
+
+    public function testDivNoZero()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Division by zero');
+
+        div_int(from_int(123456, 8), 0);
+    }
+
+    public function testDivNoNeg()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('$b must be greater than zero. Use div($a, from_int($b)) for unsigned logic');
+
+        div_int(from_int(123456, 8), -2);
+    }
+
     public function testMod()
     {
         self::assertEquals(123456 % 1000, mod_int(from_int(123456, 8), 1000));
@@ -134,6 +161,38 @@ class ArithmeticIntTest extends TestCase
         self::assertEquals(123456 % 1024, mod_int(from_int(123456, 8), 1024));
         self::assertEquals(123456 % 654321, mod_int(from_int(123456, 8), 654321));
         self::assertEquals(123456 % 123456, mod_int(from_int(123456, 8), 123456));
+    }
+
+    public function testDivMod()
+    {
+        self::assertEquals(
+            div_mod_int(from_int(123456, 8), 1000)[1],
+            mod_int(from_int(123456, 8), 1000)
+        );
+        self::assertEquals(
+            div_mod_int(from_int(123456, 8), 1)[1],
+            mod_int(from_int(123456, 8), 1)
+        );
+        self::assertEquals(
+            div_mod_int(from_int(123456, 8), 1024)[1],
+            mod_int(from_int(123456, 8), 1024)
+        );
+        self::assertEquals(
+            div_mod_int(from_int(123456, 8), 654321)[1],
+            mod_int(from_int(123456, 8), 654321)
+        );
+        self::assertEquals(
+            div_mod_int(from_int(123456, 8), 123456)[1],
+            mod_int(from_int(123456, 8), 123456)
+        );
+    }
+
+    public function testDivModNoNeg()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('$b must be greater than zero. Use div_mod($a, from_int($b)) for unsigned logic');
+
+        div_mod_int(from_int(123456, 8), -2);
     }
 
     public function testModNoZero()
