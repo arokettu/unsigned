@@ -305,6 +305,56 @@ function mul_int(string $a, int $b): string
 }
 
 /**
+ * a / b, a % b
+ *
+ * @return array [div -> string, mod -> string]
+ */
+function div_mod(string $a, string $b): array
+{
+    $sizeof = \strlen($a);
+    $sizeofb = \strlen($b);
+    if ($sizeof !== $sizeofb) {
+        throw new \InvalidArgumentException("Arguments must be the same size, $sizeof and $sizeofb bytes given");
+    }
+
+    // special cases
+    $zero = \str_repeat("\0", $sizeof);
+    $compare = u\compare($a, $b);
+    // if a < b, result is 0 and modulo is a
+    if ($compare < 0) {
+        return [$zero, $a];
+    }
+    $one = $zero;
+    $one[0] = "\1";
+    // if a = b, result is 1 and modulo is 0
+    if ($compare === 0) {
+        return [$one, $zero];
+    }
+    // 0
+    if ($b === $zero) {
+        throw new \InvalidArgumentException('Division by zero');
+    }
+    // 1
+    if ($b === $one) {
+        return [$a, $zero];
+    }
+    // for pow2 just cut the required bits
+    $b1 = u\add_int($b, -1);
+    if (($b & $b1) === $zero) {
+        $i = 0;
+        while (!u\is_bit_set($b, $i)) {
+            $i++;
+        }
+        return [
+            u\shift_right($a, $i),
+            $a & $b1,
+        ];
+    }
+
+    throw new \LogicException('Not implemented');
+}
+
+/**
  * a / int(b), a % int(b)
  *
  * @return array [div -> string, mod -> int]
@@ -347,6 +397,14 @@ function div_mod_int(string $a, int $b): array
     }
 
     return [$a, $mod];
+}
+
+/**
+ * a / b
+ */
+function div(string $a, string $b): string
+{
+    return u\div_mod($a, $b)[0];
 }
 
 /**

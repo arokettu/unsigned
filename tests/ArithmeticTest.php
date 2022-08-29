@@ -7,6 +7,8 @@ namespace Arokettu\Unsigned\Tests;
 use PHPUnit\Framework\TestCase;
 
 use function Arokettu\Unsigned\add;
+use function Arokettu\Unsigned\div;
+use function Arokettu\Unsigned\div_mod;
 use function Arokettu\Unsigned\from_int;
 use function Arokettu\Unsigned\mod;
 use function Arokettu\Unsigned\mul;
@@ -116,6 +118,33 @@ class ArithmeticTest extends TestCase
         mul("\0", "\0\0");
     }
 
+    public function testDiv()
+    {
+//        self::assertEquals(123456 % 1000, to_int(mod(from_int(123456, 8), from_int(1000, 8)))));
+        self::assertEquals(\intdiv(123456, 1), to_int(div(from_int(123456, 8), from_int(1, 8))));
+        self::assertEquals(\intdiv(123456, 1024), to_int(div(from_int(123456, 8), from_int(1024, 8))));
+        self::assertEquals(\intdiv(123456, 654321), to_int(div(from_int(123456, 8), from_int(654321, 8))));
+        self::assertEquals(\intdiv(123456, 123456), to_int(div(from_int(123456, 8), from_int(123456, 8))));
+        // negative is accepted
+        // self::assertEquals(...?, to_int(mod(from_int(123456, 8), from_int(-1000, 8)))));
+    }
+
+    public function testDivDifferentSizes()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Arguments must be the same size, 1 and 2 bytes given');
+
+        div("\0", "\0\0");
+    }
+
+    public function testDivNoZero()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Division by zero');
+
+        div(from_int(123456, 8), from_int(0, 8));
+    }
+
     public function testMod()
     {
 //        self::assertEquals(123456 % 1000, to_int(mod(from_int(123456, 8), from_int(1000, 8)))));
@@ -141,5 +170,16 @@ class ArithmeticTest extends TestCase
         $this->expectExceptionMessage('Arguments must be the same size, 1 and 2 bytes given');
 
         mod("\0", "\0\0");
+    }
+
+    public function testDivMod()
+    {
+//        self::assertEquals(123456 % 1000, to_int(mod(from_int(123456, 8), from_int(1000, 8)))));
+        self::assertEquals(123456 % 1, to_int(div_mod(from_int(123456, 8), from_int(1, 8))[1]));
+        self::assertEquals(123456 % 1024, to_int(div_mod(from_int(123456, 8), from_int(1024, 8))[1]));
+        self::assertEquals(123456 % 654321, to_int(div_mod(from_int(123456, 8), from_int(654321, 8))[1]));
+        self::assertEquals(123456 % 123456, to_int(div_mod(from_int(123456, 8), from_int(123456, 8))[1]));
+        // negative is accepted
+        // self::assertEquals(...?, to_int(mod(from_int(123456, 8), from_int(-1000, 8)))));
     }
 }
