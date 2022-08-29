@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.4.0
+
+*Aug 29, 2022*
+
+* New functions:
+  * div_mod(string, string)
+  * div_mod_int(string, int)
+  * div_(string, string)
+  * div_int(string, int)
+  * mod(string, string)
+  * mod_int(string, int)
+  * compare(string, string)
+  * set_bit(string, int)
+  * unset_bit(string, int)
+  * is_bit_set(string, int)
+
 ## 0.3.0
 
 *Aug 29, 2022*
