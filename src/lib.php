@@ -267,3 +267,43 @@ function mul(string $a, string $b): string
 
     return $newval;
 }
+
+/**
+ * a * int(b)
+ */
+function mul_int(string $a, int $b): string
+{
+    $sizeof = \strlen($a);
+
+    // special cases
+    if ($b === 0) {
+        return \str_repeat("\0", $sizeof);
+    }
+    if ($b === 1) {
+        return $a;
+    }
+    if ($b === -1) {
+        return u\neg($a);
+    }
+    // overflow for the next handler
+    if ($b === PHP_INT_MIN) {
+        return u\mul($a, u\from_int(PHP_INT_MIN, $sizeof));
+    }
+    // we handle only positive, but we can move the 'sign' to the left
+    if ($b < 0) {
+        return u\mul_int(u\neg($a), -$b);
+    }
+
+    $carry = 0;
+    for ($i = 0; $i < $sizeof; ++$i) {
+        $newChr = \ord($a[$i]) * $b + $carry;
+        if (\is_float($newChr)) {
+            // overflow, fall back to slower algorithm
+            return u\mul($a, u\from_int($b, $sizeof));
+        }
+        $a[$i] = \chr($newChr);
+        $carry = \intdiv($newChr, 256);
+    }
+
+    return $a;
+}

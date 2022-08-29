@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Arokettu\Unsigned\add_int;
 use function Arokettu\Unsigned\from_int;
+use function Arokettu\Unsigned\mul_int;
 use function Arokettu\Unsigned\sub_int;
 use function Arokettu\Unsigned\sub_int_rev;
 use function Arokettu\Unsigned\to_int;
@@ -57,8 +58,8 @@ class ArithmeticIntTest extends TestCase
         );
         // special
         self::assertEquals(
-            '40e2010000000080', // larger than int
-            bin2hex(sub_int(from_int(123456, PHP_INT_SIZE), PHP_INT_MIN))
+            123456, // zeros if sign is truncated
+            to_int(sub_int(from_int(123456, PHP_INT_SIZE - 1), PHP_INT_MIN))
         );
     }
 
@@ -78,6 +79,50 @@ class ArithmeticIntTest extends TestCase
         self::assertEquals(
             PHP_INT_MAX - 123455, // overflow
             to_int(sub_int_rev(PHP_INT_MIN, from_int(123456, PHP_INT_SIZE)))
+        );
+    }
+
+    public function testMul()
+    {
+        // normal
+        self::assertEquals(
+            11111 * 11111,
+            to_int(mul_int(from_int(11111, PHP_INT_SIZE), 11111))
+        );
+        // overflow
+        self::assertEquals(
+            (11111 * 11111) & 65535,
+            to_int(mul_int(from_int(11111, 2), 11111 ))
+        );
+        // 0
+        self::assertEquals(
+            0,
+            to_int(mul_int(from_int(11111, 2), 0))
+        );
+        // 1
+        self::assertEquals(
+            11111,
+            to_int(mul_int(from_int(11111, 2), 1))
+        );
+        // -1
+        self::assertEquals(
+            from_int(-11111, 2),
+            mul_int(from_int(11111, 2), -1)
+        );
+        // negative
+        self::assertEquals(
+            from_int(-11111 * 11111, 2),
+            mul_int(from_int(11111, 2), -11111)
+        );
+        // special case
+        self::assertEquals(
+            0, // multiplying by even number will carry sign beyond overflow
+            to_int(mul_int(from_int(11110, PHP_INT_SIZE), PHP_INT_MIN))
+        );
+        // int overflow
+        self::assertEquals(
+            65413,
+            to_int(mul_int(from_int(123, 2), PHP_INT_MAX))
         );
     }
 }

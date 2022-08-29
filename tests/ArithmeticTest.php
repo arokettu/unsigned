@@ -90,6 +90,21 @@ class ArithmeticTest extends TestCase
             (11111 * 11111) & 65535,
             to_int(mul(from_int(11111, 2), from_int(11111, 2)))
         );
+        // 0
+        self::assertEquals(
+            0,
+            to_int(mul(from_int(11111, 2), from_int(0, 2)))
+        );
+        // 1
+        self::assertEquals(
+            11111,
+            to_int(mul(from_int(11111, 2), from_int(1, 2)))
+        );
+        // -1
+        self::assertEquals(
+            from_int(-11111, 2),
+            mul(from_int(11111, 2), from_int(-1, 2))
+        );
     }
 
     public function testMulDifferentSizes()
