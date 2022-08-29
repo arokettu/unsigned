@@ -303,3 +303,38 @@ function mul_int(string $a, int $b): string
 
     return $a;
 }
+
+/**
+ * a % int(b) -> int
+ */
+function mod_int(string $a, int $b): int
+{
+    $sizeof = \strlen($a);
+
+    // special cases
+    if ($b === 0) {
+        throw new \InvalidArgumentException('Modulo by zero');
+    }
+    if ($b === 1) {
+        return 0;
+    }
+    // for pow2 just cut the required bits
+    if (($b & ($b - 1)) === 0) {
+        return u\to_int($a & u\from_int($b - 1, $sizeof));
+    }
+    // can't handle negative, convert to unsigned first
+    if ($b < 0) {
+        throw new \InvalidArgumentException(
+            '$b must be greater than zero. Use mod($a, from_int($b)) for unsigned logic'
+        );
+    }
+
+    $mod = 0;
+    $i = $sizeof;
+    while ($i--) {
+        $mod = $mod << 8;
+        $mod = ($mod | \ord($a[$i]) % $b) % $b;
+    }
+
+    return $mod;
+}
