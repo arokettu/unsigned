@@ -121,6 +121,8 @@ class ArithmeticTest extends TestCase
 //        self::assertEquals(123456 % 1000, to_int(mod(from_int(123456, 8), from_int(1000, 8)))));
         self::assertEquals(123456 % 1, to_int(mod(from_int(123456, 8), from_int(1, 8))));
         self::assertEquals(123456 % 1024, to_int(mod(from_int(123456, 8), from_int(1024, 8))));
+        self::assertEquals(123456 % 654321, to_int(mod(from_int(123456, 8), from_int(654321, 8))));
+        self::assertEquals(123456 % 123456, to_int(mod(from_int(123456, 8), from_int(123456, 8))));
         // negative is accepted
         // self::assertEquals(...?, to_int(mod(from_int(123456, 8), from_int(-1000, 8)))));
     }

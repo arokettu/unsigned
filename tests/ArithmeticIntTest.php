@@ -132,6 +132,8 @@ class ArithmeticIntTest extends TestCase
         self::assertEquals(123456 % 1000, mod_int(from_int(123456, 8), 1000));
         self::assertEquals(123456 % 1, mod_int(from_int(123456, 8), 1));
         self::assertEquals(123456 % 1024, mod_int(from_int(123456, 8), 1024));
+        self::assertEquals(123456 % 654321, mod_int(from_int(123456, 8), 654321));
+        self::assertEquals(123456 % 123456, mod_int(from_int(123456, 8), 123456));
     }
 
     public function testModNoZero()

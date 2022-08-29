@@ -316,10 +316,21 @@ function mod(string $a, string $b): string
     }
 
     // special cases
+    $compare = u\compare($a, $b);
+    // if a < b, entire a is modulo
+    if ($compare < 0) {
+        return $a;
+    }
     $zero = \str_repeat("\0", $sizeof);
+    // if a = b, modulo is 0
+    if ($compare === 0) {
+        return $zero;
+    }
+    // 0
     if ($b === $zero) {
         throw new \InvalidArgumentException('Modulo by zero');
     }
+    // 1
     $one = $zero;
     $one[0] = "\1";
     if ($b === $one) {
