@@ -34,16 +34,34 @@ function from_int(int $value, int $sizeof): string
 
 function to_int(string $value): int
 {
-    $value = \rtrim($value, "\0");
-
-    if (
-        \strlen($value) > PHP_INT_SIZE ||
-        \strlen($value) === PHP_INT_SIZE && \ord($value[PHP_INT_SIZE - 1]) > 127
-    ) {
+    if (!u\fits_into_int($value)) {
         throw new \RangeException('The value is larger than PHP integer');
     }
 
     return \hexdec(\bin2hex(\strrev($value)));
+}
+
+function to_signed_int(string $value): int
+{
+    $sizeof = \strlen($value);
+    if (u\is_bit_set($value, $sizeof * 8 - 1)) {
+        $value = ~$value;
+        return -u\to_int($value) - 1;
+    }
+
+    return u\to_int($value);
+}
+
+function fits_into_int(string $value): bool
+{
+    $value = \rtrim($value, "\0");
+    $sizeof = \strlen($value);
+
+    $notFits =
+        $sizeof > PHP_INT_SIZE ||
+        $sizeof === PHP_INT_SIZE && \ord($value[PHP_INT_SIZE - 1]) > 127;
+
+    return !$notFits;
 }
 
 function from_hex(string $value, int $sizeof): string

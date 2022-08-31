@@ -10,6 +10,7 @@ use function Arokettu\Unsigned\from_hex;
 use function Arokettu\Unsigned\from_int;
 use function Arokettu\Unsigned\to_hex;
 use function Arokettu\Unsigned\to_int;
+use function Arokettu\Unsigned\to_signed_int;
 
 class ImportExportTest extends TestCase
 {
@@ -76,6 +77,17 @@ class ImportExportTest extends TestCase
 
         // negative of equal or greater size than PHP_INT
         to_int(from_int(-1, PHP_INT_SIZE));
+    }
+
+    public function testToSigned()
+    {
+        self::assertEquals(0, to_signed_int(from_int(0, PHP_INT_SIZE)));
+        self::assertEquals(1, to_signed_int(from_int(1, PHP_INT_SIZE)));
+        self::assertEquals(-1, to_signed_int(from_int(-1, PHP_INT_SIZE)));
+        self::assertEquals(123, to_signed_int(from_int(123, PHP_INT_SIZE)));
+        self::assertEquals(-123, to_signed_int(from_int(-123, PHP_INT_SIZE)));
+        self::assertEquals(PHP_INT_MAX, to_signed_int(from_int(PHP_INT_MAX, PHP_INT_SIZE)));
+        self::assertEquals(PHP_INT_MIN, to_signed_int(from_int(PHP_INT_MIN, PHP_INT_SIZE)));
     }
 
     public function testFromHex()
