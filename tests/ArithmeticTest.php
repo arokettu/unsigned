@@ -9,11 +9,13 @@ use PHPUnit\Framework\TestCase;
 use function Arokettu\Unsigned\add;
 use function Arokettu\Unsigned\div;
 use function Arokettu\Unsigned\div_mod;
+use function Arokettu\Unsigned\from_hex;
 use function Arokettu\Unsigned\from_int;
 use function Arokettu\Unsigned\mod;
 use function Arokettu\Unsigned\mul;
 use function Arokettu\Unsigned\neg;
 use function Arokettu\Unsigned\sub;
+use function Arokettu\Unsigned\to_hex;
 use function Arokettu\Unsigned\to_int;
 
 class ArithmeticTest extends TestCase
@@ -108,6 +110,20 @@ class ArithmeticTest extends TestCase
             from_int(-11111, 2),
             mul(from_int(11111, 2), from_int(-1, 2))
         );
+        // $a does not fit into int
+        self::assertEquals(
+            '01234566666666666666666666654321',
+            to_hex(mul(from_hex('11111111111111111111111111', 16), from_hex('111111', 16)))
+        );
+        // both don't fit
+        self::assertEquals(
+            '01234566666666666666666666654321',
+            to_hex(mul(from_hex('11111111111111111111111111', 16), from_hex('111111', 16)))
+        );
+        self::assertEquals(
+            '56789aba987654320fedcba987654321',
+            to_hex(mul(from_hex('11111111111111111111111111', 16), from_hex('11111111111111111111111111', 16)))
+        );
     }
 
     public function testMulDifferentSizes()
@@ -136,6 +152,22 @@ class ArithmeticTest extends TestCase
         self::assertEquals(
             \intdiv(0x4f423f23, 0x1257ac45),
             to_int(div(from_int(0x4f423f23, 8), from_int(0x1257ac45, 8)))
+        );
+        // 32 bytes by 9 bytes
+        self::assertEquals(
+            '0000000000000000032b13cb42f11b51a9655f6e1d1cf2354907e0cbcc7ae6cd',
+            to_hex(div(
+                from_hex('64fc4b486b2c1cbd14171f5e5e0b2eaf71b572afbaedd62caf2570c5de320073', 32),
+                from_hex('00000000000000000000000000000000000000000000001fdfbfb8cbd41dd1ed', 32)
+            ))
+        );
+        // 32 bytes by 32 bytes
+        self::assertEquals(
+            '0000000000000000000000000000000000000000000000000000000000000002',
+            to_hex(div(
+                from_hex('eca097608c3c403463d2d437fa67362d4d49bdc0e322df559960ef4dfd3dac50', 32),
+                from_hex('64fc4b486b2c1cbd14171f5e5e0b2eaf71b572afbaedd62caf2570c5de320073', 32)
+            ))
         );
     }
 
@@ -178,6 +210,23 @@ class ArithmeticTest extends TestCase
         // verify length
         self::assertEquals(8, \strlen(mod(from_int(0x4f423f23, 8), from_int(0x45, 8))));
         self::assertEquals(8, \strlen(mod(from_int(0x4f423f23, 8), from_int(0x1257ac45, 8))));
+
+        // 32 bytes by 9 bytes
+        self::assertEquals(
+            '000000000000000000000000000000000000000000000006269ca48c50c3f7aa',
+            to_hex(mod(
+                from_hex('64fc4b486b2c1cbd14171f5e5e0b2eaf71b572afbaedd62caf2570c5de320073', 32),
+                from_hex('00000000000000000000000000000000000000000000001fdfbfb8cbd41dd1ed', 32)
+            ))
+        );
+        // 32 bytes by 32 bytes
+        self::assertEquals(
+            '22a800cfb5e406ba3ba4957b3e50d8ce69ded8616d4732fc3b160dc240d9ab6a',
+            to_hex(mod(
+                from_hex('eca097608c3c403463d2d437fa67362d4d49bdc0e322df559960ef4dfd3dac50', 32),
+                from_hex('64fc4b486b2c1cbd14171f5e5e0b2eaf71b572afbaedd62caf2570c5de320073', 32)
+            ))
+        );
     }
 
     public function testModNoZero()

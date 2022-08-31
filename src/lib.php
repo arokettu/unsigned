@@ -252,6 +252,14 @@ function mul(string $a, string $b): string
     if ($sizeof !== $sizeofb) {
         throw new \InvalidArgumentException("Arguments must be the same size, $sizeof and $sizeofb bytes given");
     }
+    // if we're lucky to have a small $a
+    if (u\fits_into_int($a)) {
+        return u\mul_int($b, u\to_int($a));
+    }
+    // or $b
+    if (u\fits_into_int($b)) {
+        return u\mul_int($a, u\to_int($b));
+    }
 
     $newval = \str_repeat("\0", $sizeof);
 
@@ -354,6 +362,14 @@ function div_mod(string $a, string $b): array
         return [
             u\shift_right($a, $i),
             $a & $b1,
+        ];
+    }
+    // if we're lucky to have a small $b
+    if (u\fits_into_int($b)) {
+        list($div, $mod) = u\div_mod_int($a, u\to_int($b));
+        return [
+            $div,
+            u\from_int($mod, $sizeof),
         ];
     }
 
@@ -485,6 +501,10 @@ function mod(string $a, string $b): string
     $b1 = u\add_int($b, -1);
     if (($b & $b1) === $zero) {
         return $a & $b1;
+    }
+    // if we're lucky to have a small $b
+    if (u\fits_into_int($b)) {
+        return u\from_int(u\mod_int($a, u\to_int($b)), $sizeof);
     }
 
     // do a slow algo
