@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.0
+
+*Aug 31, 2022*
+
+* fits_into_int(string)
+* to_signed_int(string)
+* Multiplication and division optimizations for small arguments
+
 ## 0.4.1
 
 *Aug 30, 2022*
