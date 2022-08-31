@@ -1,9 +1,22 @@
 {
     "name": "arokettu/unsigned",
     "description": "Fixed length unsigned arithmetic emulation",
-    "tags": ["arithmetic", "unsigned"],
+    "keywords": ["arithmetic", "unsigned"],
     "type": "library",
     "license": "BSD-2-Clause",
+    "homepage": "https://sandfox.dev/php/unsigned.html",
+    "authors": [{
+        "name": "Anton Smirnov",
+        "email": "sandfox@sandfox.me",
+        "homepage": "https://sandfox.me/",
+        "role": "developer"
+    }],
+    "support": {
+        "issues": "https://gitlab.com/sandfox/unsigned/-/issues",
+        "source": "https://gitlab.com/sandfox/unsigned",
+        "docs": "https://php-unsigned.readthedocs.io/",
+        "chat": "https://gitter.im/arokettu/community"
+    },
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
