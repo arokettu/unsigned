@@ -245,7 +245,7 @@ function neg(string $a): string
 /**
  * a * b
  */
-function mul(string $a, string $b): string
+function mul(string $a, string $b, bool $forceSlow = false): string
 {
     $sizeof = \strlen($a);
     $sizeofb = \strlen($b);
@@ -253,11 +253,11 @@ function mul(string $a, string $b): string
         throw new \InvalidArgumentException("Arguments must be the same size, $sizeof and $sizeofb bytes given");
     }
     // if we're lucky to have a small $a
-    if (u\fits_into_int($a)) {
+    if (!$forceSlow && u\fits_into_int($a)) {
         return u\mul_int($b, u\to_int($a));
     }
     // or $b
-    if (u\fits_into_int($b)) {
+    if (!$forceSlow && u\fits_into_int($b)) {
         return u\mul_int($a, u\to_int($b));
     }
 
@@ -309,7 +309,7 @@ function mul_int(string $a, int $b): string
         $newChr = \ord($a[$i]) * $b + $carry;
         if (\is_float($newChr)) {
             // overflow, fall back to slower algorithm
-            return u\mul($a, u\from_int($b, $sizeof));
+            return u\mul($a, u\from_int($b, $sizeof), true);
         }
         $a[$i] = \chr($newChr);
         $carry = $newChr >> 8;

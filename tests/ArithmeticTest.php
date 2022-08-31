@@ -124,6 +124,11 @@ class ArithmeticTest extends TestCase
             '56789aba987654320fedcba987654321',
             to_hex(mul(from_hex('11111111111111111111111111', 16), from_hex('11111111111111111111111111', 16)))
         );
+        // infinite recursion detected
+        self::assertEquals(
+            1,
+            to_int(mul(from_int(PHP_INT_MAX, PHP_INT_SIZE), from_int(PHP_INT_MAX, PHP_INT_SIZE)))
+        );
     }
 
     public function testMulDifferentSizes()
