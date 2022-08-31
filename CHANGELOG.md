@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0
+
+*Sep 1, 2022*
+
+Re-release 0.5.0 as a final release
+
 ## 0.5.0
 
 *Aug 31, 2022*
