@@ -323,7 +323,7 @@ function mul_int(string $a, int $b): string
  *
  * @return array [div -> string, mod -> string]
  */
-function div_mod(string $a, string $b): array
+function div_mod(string $a, string $b, bool $forceSlow = false): array
 {
     $sizeof = \strlen($a);
     $sizeofb = \strlen($b);
@@ -365,7 +365,7 @@ function div_mod(string $a, string $b): array
         ];
     }
     // if we're lucky to have a small $b
-    if (u\fits_into_int($b)) {
+    if (!$forceSlow && u\fits_into_int($b)) {
         list($div, $mod) = u\div_mod_int($a, u\to_int($b));
         return [
             $div,
@@ -431,14 +431,19 @@ function div_mod_int(string $a, int $b): array
     }
 
     $mod = 0;
+    $div = \str_repeat("\0", $sizeof);
     $i = $sizeof;
     while ($i--) {
         $dividend = $mod << 8 | \ord($a[$i]);
-        $a[$i] = \chr(\intdiv($dividend, $b));
+        if ($dividend < 0 || !\is_int($dividend)) {
+            $divmod = u\div_mod($a, u\from_int($b, $sizeof), true);
+            return [$divmod[0], u\to_int($divmod[1])];
+        }
+        $div[$i] = \chr(\intdiv($dividend, $b));
         $mod = $dividend % $b;
     }
 
-    return [$a, $mod];
+    return [$div, $mod];
 }
 
 /**
@@ -539,7 +544,12 @@ function mod_int(string $a, int $b): int
     $mod = 0;
     $i = $sizeof;
     while ($i--) {
-        $mod = ($mod << 8 | \ord($a[$i])) % $b;
+        $dividend = $mod << 8 | \ord($a[$i]);
+        if ($dividend < 0 || !\is_int($dividend)) {
+            // overflow
+            return u\to_int(u\div_mod($a, u\from_int($b, $sizeof), true)[1]);
+        }
+        $mod = $dividend % $b;
     }
 
     return $mod;

@@ -178,7 +178,7 @@ class ArithmeticTest extends TestCase
         // edge case found
         self::assertEquals(
             14,
-            to_int(mod(
+            to_int(div(
                 from_hex('ffffffffffffffff', 8), // 2**64-1
                 from_hex('112210f47de98116', 8)  // 1234567890123456790
             ))
