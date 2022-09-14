@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1
+
+*Sep 14, 2022*
+
+* Fixed integer overflow in div_mod_int and mod_int
+
 ## 1.0.0
 
 *Sep 1, 2022*
