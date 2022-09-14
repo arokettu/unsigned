@@ -174,6 +174,15 @@ class ArithmeticTest extends TestCase
                 from_hex('64fc4b486b2c1cbd14171f5e5e0b2eaf71b572afbaedd62caf2570c5de320073', 32)
             ))
         );
+
+        // edge case found
+        self::assertEquals(
+            14,
+            to_int(mod(
+                from_hex('ffffffffffffffff', 8), // 2**64-1
+                from_hex('112210f47de98116', 8)  // 1234567890123456790
+            ))
+        );
     }
 
     public function testDivDifferentSizes()
@@ -230,6 +239,15 @@ class ArithmeticTest extends TestCase
             to_hex(mod(
                 from_hex('eca097608c3c403463d2d437fa67362d4d49bdc0e322df559960ef4dfd3dac50', 32),
                 from_hex('64fc4b486b2c1cbd14171f5e5e0b2eaf71b572afbaedd62caf2570c5de320073', 32)
+            ))
+        );
+
+        // edge case found
+        self::assertEquals(
+            '102312a11d3af0cb',
+            to_hex(mod(
+                from_hex('ffffffffffffffff', 8), // 2**64-1
+                from_hex('112210f47de98116', 8)  // 1234567890123456790
             ))
         );
     }
