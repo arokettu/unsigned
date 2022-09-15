@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+*Sep 15, 2022*
+
+* Multiplication is now 50% faster on 64-bit systems
+
 ## 1.0.1
 
 *Sep 14, 2022*
