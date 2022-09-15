@@ -261,6 +261,14 @@ function mul(string $a, string $b, bool $forceSlow = false): string
         return u\mul_int($a, u\to_int($b));
     }
 
+    return \PHP_INT_SIZE >= 8 ? u\_raw_mul64($a, $b, $sizeof) : u\_raw_mul32($a, $b, $sizeof);
+}
+
+/**
+ * @internal
+ */
+function _raw_mul32(string $a, string $b, int $sizeof): string
+{
     $newval = \str_repeat("\0", $sizeof);
 
     for ($i = 0; $i < $sizeof; $i++) {
@@ -276,6 +284,41 @@ function mul(string $a, string $b, bool $forceSlow = false): string
     }
 
     return $newval;
+}
+
+/**
+ * @internal
+ */
+function _raw_mul64(string $a, string $b, int $sizeof): string
+{
+    // we can safely process 3 (PHP_INT_SIZE-1 div 2) on 64-bit systems
+
+    $m = $sizeof % 3;
+    $sizeofPadded = $m ? $sizeof + 3 - $m : $sizeof;
+
+    $a = \str_pad($a, $sizeofPadded, "\0", \STR_PAD_RIGHT);
+    $b = \str_pad($b, $sizeofPadded, "\0", \STR_PAD_RIGHT);
+    $newval = \str_repeat("\0", $sizeofPadded);
+
+    for ($i = 0; $i < $sizeof; $i += 3) {
+        $carry = 0;
+        $ordI = \ord($a[$i + 2]) << 16 | \ord($a[$i + 1]) << 8 | \ord($a[$i]);
+        for ($j = 0; $j < $sizeof - $i; $j += 3) {
+            $idx = $i + $j;
+            $ordJ = \ord($b[$j + 2]) << 16 | \ord($b[$j + 1]) << 8 | \ord($b[$j]);
+            $ordNewval = \ord($newval[$idx + 2]) << 16 | \ord($newval[$idx + 1]) << 8 | \ord($newval[$idx]);
+
+            $newChr = $ordI * $ordJ + $ordNewval + $carry;
+            $newval[$idx] = \chr($newChr);
+            $newChr >>= 8;
+            $newval[$idx + 1] = \chr($newChr);
+            $newChr >>= 8;
+            $newval[$idx + 2] = \chr($newChr);
+            $carry = $newChr >> 8;
+        }
+    }
+
+    return $sizeofPadded === $sizeof ? $newval : \substr($newval, 0, $sizeof);
 }
 
 /**

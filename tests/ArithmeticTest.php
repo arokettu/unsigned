@@ -6,6 +6,7 @@ namespace Arokettu\Unsigned\Tests;
 
 use PHPUnit\Framework\TestCase;
 
+use function Arokettu\Unsigned\_raw_mul32;
 use function Arokettu\Unsigned\add;
 use function Arokettu\Unsigned\div;
 use function Arokettu\Unsigned\div_mod;
@@ -128,6 +129,62 @@ class ArithmeticTest extends TestCase
         self::assertEquals(
             1,
             to_int(mul(from_int(\PHP_INT_MAX, \PHP_INT_SIZE), from_int(\PHP_INT_MAX, \PHP_INT_SIZE)))
+        );
+    }
+
+    public function testMul32()
+    {
+        // normal
+        self::assertEquals(
+            11111 * 11111,
+            to_int(_raw_mul32(from_int(11111, \PHP_INT_SIZE), from_int(11111, \PHP_INT_SIZE), \PHP_INT_SIZE))
+        );
+        //overflow
+        self::assertEquals(
+            (11111 * 11111) & 65535,
+            to_int(_raw_mul32(from_int(11111, 2), from_int(11111, 2), 2))
+        );
+        // 0
+        self::assertEquals(
+            0,
+            to_int(_raw_mul32(from_int(11111, 2), from_int(0, 2), 2))
+        );
+        // 1
+        self::assertEquals(
+            11111,
+            to_int(_raw_mul32(from_int(11111, 2), from_int(1, 2), 2))
+        );
+        // -1
+        self::assertEquals(
+            from_int(-11111, 2),
+            _raw_mul32(from_int(11111, 2), from_int(-1, 2), 2)
+        );
+        // $a does not fit into int
+        self::assertEquals(
+            '01234566666666666666666666654321',
+            to_hex(_raw_mul32(from_hex('11111111111111111111111111', 16), from_hex('111111', 16), 16))
+        );
+        // both don't fit
+        self::assertEquals(
+            '01234566666666666666666666654321',
+            to_hex(_raw_mul32(from_hex('11111111111111111111111111', 16), from_hex('111111', 16), 16))
+        );
+        self::assertEquals(
+            '56789aba987654320fedcba987654321',
+            to_hex(_raw_mul32(
+                from_hex('11111111111111111111111111', 16),
+                from_hex('11111111111111111111111111', 16),
+                16
+            ))
+        );
+        // infinite recursion detected
+        self::assertEquals(
+            1,
+            to_int(_raw_mul32(
+                from_int(\PHP_INT_MAX, \PHP_INT_SIZE),
+                from_int(\PHP_INT_MAX, \PHP_INT_SIZE),
+                \PHP_INT_SIZE
+            ))
         );
     }
 
