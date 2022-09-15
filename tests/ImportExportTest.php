@@ -28,15 +28,15 @@ class ImportExportTest extends TestCase
         // target PHP_INT_SIZE
 
         // positive
-        self::assertEquals(\str_pad("\x23\x01", PHP_INT_SIZE, "\0"), from_int(0x123, PHP_INT_SIZE));
+        self::assertEquals(\str_pad("\x23\x01", \PHP_INT_SIZE, "\0"), from_int(0x123, \PHP_INT_SIZE));
         // zero
-        self::assertEquals(\str_repeat("\0", PHP_INT_SIZE), from_int(0, PHP_INT_SIZE));
+        self::assertEquals(\str_repeat("\0", \PHP_INT_SIZE), from_int(0, \PHP_INT_SIZE));
         // negative
-        self::assertEquals(\str_pad("\xf0\xff", PHP_INT_SIZE, "\xff"), from_int(-0x10, PHP_INT_SIZE));
+        self::assertEquals(\str_pad("\xf0\xff", \PHP_INT_SIZE, "\xff"), from_int(-0x10, \PHP_INT_SIZE));
 
         // target above PHP_INT_SIZE
 
-        if (PHP_INT_SIZE > 8) {
+        if (\PHP_INT_SIZE > 8) {
             throw new \LogicException('The future arrived! Update tests!');
         }
 
@@ -57,9 +57,9 @@ class ImportExportTest extends TestCase
     public function testToInt()
     {
         self::assertEquals(0x123, to_int("\x23\x01"));
-        self::assertEquals(PHP_INT_MAX, to_int(from_int(PHP_INT_MAX, PHP_INT_SIZE)));
+        self::assertEquals(\PHP_INT_MAX, to_int(from_int(\PHP_INT_MAX, \PHP_INT_SIZE)));
         // negative of lower size than PHP_INT
-        self::assertEquals(-1 & PHP_INT_MAX >> 7, to_int(from_int(-1, PHP_INT_SIZE - 1)));
+        self::assertEquals(-1 & \PHP_INT_MAX >> 7, to_int(from_int(-1, \PHP_INT_SIZE - 1)));
     }
 
     public function testToIntTooBig()
@@ -67,7 +67,7 @@ class ImportExportTest extends TestCase
         $this->expectException(\RangeException::class);
         $this->expectExceptionMessage('The value is larger than PHP integer');
 
-        to_int(\str_repeat("\xff", PHP_INT_SIZE + 1));
+        to_int(\str_repeat("\xff", \PHP_INT_SIZE + 1));
     }
 
     public function testToIntTooBigNeg()
@@ -76,18 +76,18 @@ class ImportExportTest extends TestCase
         $this->expectExceptionMessage('The value is larger than PHP integer');
 
         // negative of equal or greater size than PHP_INT
-        to_int(from_int(-1, PHP_INT_SIZE));
+        to_int(from_int(-1, \PHP_INT_SIZE));
     }
 
     public function testToSigned()
     {
-        self::assertEquals(0, to_signed_int(from_int(0, PHP_INT_SIZE)));
-        self::assertEquals(1, to_signed_int(from_int(1, PHP_INT_SIZE)));
-        self::assertEquals(-1, to_signed_int(from_int(-1, PHP_INT_SIZE)));
-        self::assertEquals(123, to_signed_int(from_int(123, PHP_INT_SIZE)));
-        self::assertEquals(-123, to_signed_int(from_int(-123, PHP_INT_SIZE)));
-        self::assertEquals(PHP_INT_MAX, to_signed_int(from_int(PHP_INT_MAX, PHP_INT_SIZE)));
-        self::assertEquals(PHP_INT_MIN, to_signed_int(from_int(PHP_INT_MIN, PHP_INT_SIZE)));
+        self::assertEquals(0, to_signed_int(from_int(0, \PHP_INT_SIZE)));
+        self::assertEquals(1, to_signed_int(from_int(1, \PHP_INT_SIZE)));
+        self::assertEquals(-1, to_signed_int(from_int(-1, \PHP_INT_SIZE)));
+        self::assertEquals(123, to_signed_int(from_int(123, \PHP_INT_SIZE)));
+        self::assertEquals(-123, to_signed_int(from_int(-123, \PHP_INT_SIZE)));
+        self::assertEquals(\PHP_INT_MAX, to_signed_int(from_int(\PHP_INT_MAX, \PHP_INT_SIZE)));
+        self::assertEquals(\PHP_INT_MIN, to_signed_int(from_int(\PHP_INT_MIN, \PHP_INT_SIZE)));
     }
 
     public function testFromHex()

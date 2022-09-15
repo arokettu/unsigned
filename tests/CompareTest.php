@@ -13,13 +13,13 @@ class CompareTest extends TestCase
 {
     public function testCompare()
     {
-        self::assertEquals(-1, compare(from_int(0, PHP_INT_SIZE), from_int(PHP_INT_MAX, PHP_INT_SIZE)));
-        self::assertEquals(1, compare(from_int(PHP_INT_MAX, PHP_INT_SIZE), from_int(0, PHP_INT_SIZE)));
+        self::assertEquals(-1, compare(from_int(0, \PHP_INT_SIZE), from_int(\PHP_INT_MAX, \PHP_INT_SIZE)));
+        self::assertEquals(1, compare(from_int(\PHP_INT_MAX, \PHP_INT_SIZE), from_int(0, \PHP_INT_SIZE)));
 
-        self::assertEquals(-1, compare(from_int(123456, PHP_INT_SIZE), from_int(654321, PHP_INT_SIZE)));
-        self::assertEquals(1, compare(from_int(654321, PHP_INT_SIZE), from_int(123456, PHP_INT_SIZE)));
+        self::assertEquals(-1, compare(from_int(123456, \PHP_INT_SIZE), from_int(654321, \PHP_INT_SIZE)));
+        self::assertEquals(1, compare(from_int(654321, \PHP_INT_SIZE), from_int(123456, \PHP_INT_SIZE)));
 
-        self::assertEquals(0, compare(from_int(111111, PHP_INT_SIZE), from_int(111111, PHP_INT_SIZE)));
+        self::assertEquals(0, compare(from_int(111111, \PHP_INT_SIZE), from_int(111111, \PHP_INT_SIZE)));
     }
 
     public function testCompareDifferentSizes()

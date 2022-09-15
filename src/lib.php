@@ -20,7 +20,7 @@ function from_int(int $value, int $sizeof): string
     switch ($strlen <=> $hexsize) {
         case -1:
             // pad according to sign
-            $hex = \str_pad($hex, $hexsize, $value >= 0 ? '0' : 'f', STR_PAD_LEFT);
+            $hex = \str_pad($hex, $hexsize, $value >= 0 ? '0' : 'f', \STR_PAD_LEFT);
             break;
 
         case 1:
@@ -58,8 +58,8 @@ function fits_into_int(string $value): bool
     $sizeof = \strlen($value);
 
     $notFits =
-        $sizeof > PHP_INT_SIZE ||
-        $sizeof === PHP_INT_SIZE && \ord($value[PHP_INT_SIZE - 1]) > 127;
+        $sizeof > \PHP_INT_SIZE ||
+        $sizeof === \PHP_INT_SIZE && \ord($value[\PHP_INT_SIZE - 1]) > 127;
 
     return !$notFits;
 }
@@ -72,7 +72,7 @@ function from_hex(string $value, int $sizeof): string
     switch ($strlen <=> $hexsize) {
         case -1:
             // pad with zeros
-            $value = \str_pad($value, $hexsize, '0', STR_PAD_LEFT);
+            $value = \str_pad($value, $hexsize, '0', \STR_PAD_LEFT);
             break;
 
         case 1:
@@ -220,8 +220,8 @@ function sub(string $a, string $b): string
 function sub_int(string $a, int $b): string
 {
     // handle overflow on negative
-    if ($b === PHP_INT_MIN) {
-        return u\sub($a, u\from_int(PHP_INT_MIN, \strlen($a)));
+    if ($b === \PHP_INT_MIN) {
+        return u\sub($a, u\from_int(\PHP_INT_MIN, \strlen($a)));
     }
     return u\add_int($a, -$b);
 }
@@ -296,8 +296,8 @@ function mul_int(string $a, int $b): string
         return u\neg($a);
     }
     // overflow for the next handler
-    if ($b === PHP_INT_MIN) {
-        return u\mul($a, u\from_int(PHP_INT_MIN, $sizeof));
+    if ($b === \PHP_INT_MIN) {
+        return u\mul($a, u\from_int(\PHP_INT_MIN, $sizeof));
     }
     // we handle only positive, but we can move the 'sign' to the left
     if ($b < 0) {

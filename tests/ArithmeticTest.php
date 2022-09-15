@@ -25,7 +25,7 @@ class ArithmeticTest extends TestCase
         // normal
         self::assertEquals(
             123456 + 654321,
-            to_int(add(from_int(123456, PHP_INT_SIZE), from_int(654321, PHP_INT_SIZE)))
+            to_int(add(from_int(123456, \PHP_INT_SIZE), from_int(654321, \PHP_INT_SIZE)))
         );
         //overflow
         self::assertEquals(
@@ -47,12 +47,12 @@ class ArithmeticTest extends TestCase
         // normal
         self::assertEquals(
             654321 - 123456,
-            to_int(sub(from_int(654321, PHP_INT_SIZE), from_int(123456, PHP_INT_SIZE)))
+            to_int(sub(from_int(654321, \PHP_INT_SIZE), from_int(123456, \PHP_INT_SIZE)))
         );
         // overflow
         self::assertEquals(
-            (123456 - 654321) & PHP_INT_MAX >> 7,
-            to_int(sub(from_int(123456, PHP_INT_SIZE - 1), from_int(654321, PHP_INT_SIZE - 1)))
+            (123456 - 654321) & \PHP_INT_MAX >> 7,
+            to_int(sub(from_int(123456, \PHP_INT_SIZE - 1), from_int(654321, \PHP_INT_SIZE - 1)))
         );
     }
 
@@ -61,12 +61,12 @@ class ArithmeticTest extends TestCase
         // something that converts to int
         self::assertEquals(
             123,
-            to_int(neg(from_int(-123, PHP_INT_SIZE)))
+            to_int(neg(from_int(-123, \PHP_INT_SIZE)))
         );
         // 0
         self::assertEquals(
             0,
-            to_int(neg(from_int(0, PHP_INT_SIZE)))
+            to_int(neg(from_int(0, \PHP_INT_SIZE)))
         );
         // small size
         self::assertEquals(
@@ -88,7 +88,7 @@ class ArithmeticTest extends TestCase
         // normal
         self::assertEquals(
             11111 * 11111,
-            to_int(mul(from_int(11111, PHP_INT_SIZE), from_int(11111, PHP_INT_SIZE)))
+            to_int(mul(from_int(11111, \PHP_INT_SIZE), from_int(11111, \PHP_INT_SIZE)))
         );
         //overflow
         self::assertEquals(
@@ -127,7 +127,7 @@ class ArithmeticTest extends TestCase
         // infinite recursion detected
         self::assertEquals(
             1,
-            to_int(mul(from_int(PHP_INT_MAX, PHP_INT_SIZE), from_int(PHP_INT_MAX, PHP_INT_SIZE)))
+            to_int(mul(from_int(\PHP_INT_MAX, \PHP_INT_SIZE), from_int(\PHP_INT_MAX, \PHP_INT_SIZE)))
         );
     }
 

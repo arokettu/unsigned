@@ -14,19 +14,19 @@ class ShiftsTest extends TestCase
 {
     public function testLeftShift()
     {
-        $num = from_int(-1, PHP_INT_SIZE);
+        $num = from_int(-1, \PHP_INT_SIZE);
 
-        for ($i = 0; $i <= PHP_INT_SIZE * 8; $i++) {
-            self::assertEquals(from_int(-1 << $i, PHP_INT_SIZE), shift_left($num, $i));
+        for ($i = 0; $i <= \PHP_INT_SIZE * 8; $i++) {
+            self::assertEquals(from_int(-1 << $i, \PHP_INT_SIZE), shift_left($num, $i));
         }
     }
 
     public function testRightShift()
     {
-        $num = from_int(PHP_INT_MAX, PHP_INT_SIZE);
+        $num = from_int(\PHP_INT_MAX, \PHP_INT_SIZE);
 
-        for ($i = 0; $i <= PHP_INT_SIZE * 8; $i++) {
-            self::assertEquals(from_int(PHP_INT_MAX >> $i, PHP_INT_SIZE), shift_right($num, $i));
+        for ($i = 0; $i <= \PHP_INT_SIZE * 8; $i++) {
+            self::assertEquals(from_int(\PHP_INT_MAX >> $i, \PHP_INT_SIZE), shift_right($num, $i));
         }
     }
 
