@@ -2,7 +2,7 @@
 /docs/*.txt         export-ignore
 /docs/_*            export-ignore
 /tests              export-ignore
-/debug              export-ignore
 /.git*              export-ignore
 /*.yml              export-ignore
 /*.xml              export-ignore
+/*.xml.dist         export-ignore
