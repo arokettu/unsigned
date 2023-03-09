@@ -89,6 +89,38 @@ function to_hex(string $value): string
     return \bin2hex(\strrev($value));
 }
 
+function from_dec(string $value, int $sizeof): string
+{
+    if (!\preg_match('/^\d+$/', $value)) {
+        throw new \InvalidArgumentException('$value must be a decimal string');
+    }
+
+    $result = \str_repeat("\0", $sizeof);
+
+    for ($i = 0; $i < \strlen($value); $i++) {
+        $result = u\add_int(
+            u\mul_int($result, 10),
+            \intval($value[$i])
+        );
+    }
+
+    return $result;
+}
+
+function to_dec(string $value): string
+{
+    $result = '';
+
+    $zero = \str_repeat("\0", \strlen($value));
+
+    do {
+        list($value, $mod) = u\div_mod_int($value, 10);
+        $result .= \strval($mod);
+    } while ($value !== $zero);
+
+    return \strrev($result);
+}
+
 /**
  * $value << $shift
  */

@@ -6,8 +6,10 @@ namespace Arokettu\Unsigned\Tests;
 
 use PHPUnit\Framework\TestCase;
 
+use function Arokettu\Unsigned\from_dec;
 use function Arokettu\Unsigned\from_hex;
 use function Arokettu\Unsigned\from_int;
+use function Arokettu\Unsigned\to_dec;
 use function Arokettu\Unsigned\to_hex;
 use function Arokettu\Unsigned\to_int;
 use function Arokettu\Unsigned\to_signed_int;
@@ -105,5 +107,28 @@ class ImportExportTest extends TestCase
     public function testToHex()
     {
         self::assertEquals('000123', to_hex(from_int(0x123, 3)));
+    }
+
+    public function testFromDec()
+    {
+        self::assertEquals(123456789, to_int(from_dec('123456789', 16)));
+        self::assertEquals(123456789 & 255 /*21*/, to_int(from_dec('123456789', 1)));
+        self::assertEquals(0, to_int(from_dec('0', 16)));
+    }
+
+    public function testFromDecOnlyDigits()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('$value must be a decimal string');
+
+        from_dec('abc', 16);
+    }
+
+    public function testToDec()
+    {
+        self::assertEquals('123456789', to_dec(from_int(123456789, 16)));
+        self::assertEquals('21', to_dec(from_int(123456789, 1)));
+        self::assertEquals('0', to_dec(from_int(0, 16)));
+        self::assertEquals('340282366920938463463374607431768211455', to_dec(from_int(-1, 16)));
     }
 }
