@@ -14,6 +14,18 @@ The lib was created as a helper for the random-polyfill.
 composer require 'arokettu/unsigned'
 ```
 
+## Example
+
+```php
+<?php
+use Arokettu\Unsigned as u;
+$a = u\from_int(1234567890123456789, 24);
+$b = u\from_hex('123456789abcdef01234567890abcdef', 24);
+// 1234567890123456789 * 0x123456789abcdef01234567890abcdef =
+$c = u\mul($a, $b);
+var_dump(u\to_dec($c)); // 29873897512945703720213152879288233401251320475301467035
+```
+
 ## Documentation
 
 Read full documentation here: <https://sandfox.dev/php/unsigned.html>
