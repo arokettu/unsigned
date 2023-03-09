@@ -2,6 +2,10 @@
 
 ## 1.x
 
+### next
+
+* Functions to convert to and from decimal strings
+
 ### 1.0.2
 
 *Sep 15, 2022*

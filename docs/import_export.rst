@@ -27,6 +27,16 @@ To working string
 
     If ``strlen($value) >= $sizeof * 2``, value may be truncated.
 
+.. php:function:: from_dec(string $value, int $sizeof): string
+
+    Imports a number written as a decimal string.
+
+    :param int $value: String of digits
+    :param int $sizeof: Length of the unsigned number in bytes
+    :return: Binary string in the form this library accepts
+
+    If ``intval($value) >= $sizeof * 2``, value may be truncated.
+
 From working string
 ===================
 
@@ -54,3 +64,10 @@ From working string
 
     :param string $value: Binary string in the form this library accepts
     :return: String of hex digits
+
+.. php:function:: to_dec(string $value): bool
+
+    Exports a number to a decimal string.
+
+    :param string $value: Binary string in the form this library accepts
+    :return: String of digits
