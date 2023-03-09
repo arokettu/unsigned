@@ -2,7 +2,9 @@
 
 ## 1.x
 
-### next
+### 1.1.0
+
+*Mar 9, 2023*
 
 * Functions to convert to and from decimal strings
 
