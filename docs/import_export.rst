@@ -21,7 +21,7 @@ To working string
 
     Imports a number written as a hexadecimal string.
 
-    :param int $value: String of hex digits
+    :param string $value: String of hex digits
     :param int $sizeof: Length of the unsigned number in bytes
     :return: Binary string in the form this library accepts
 
@@ -31,7 +31,7 @@ To working string
 
     Imports a number written as a decimal string.
 
-    :param int $value: String of digits
+    :param string $value: String of digits
     :param int $sizeof: Length of the unsigned number in bytes
     :return: Binary string in the form this library accepts
 
@@ -41,7 +41,7 @@ To working string
 
     Imports a number written in base specified in $base.
 
-    :param int $value: String of digits
+    :param string $value: String of digits
     :param int $base: Number base between 2 and 36
     :param int $sizeof: Length of the unsigned number in bytes
     :return: Binary string in the form this library accepts
