@@ -37,6 +37,17 @@ To working string
 
     If ``intval($value) >= $sizeof * 2``, value may be truncated.
 
+.. php:function:: from_base(string $value, int $base, int $sizeof): string
+
+    Imports a number written in base specified in $base.
+
+    :param int $value: String of digits
+    :param int $base: Number base between 2 and 36
+    :param int $sizeof: Length of the unsigned number in bytes
+    :return: Binary string in the form this library accepts
+
+    If ``intval($value) >= $sizeof * 2``, value may be truncated.
+
 From working string
 ===================
 
@@ -70,4 +81,12 @@ From working string
     Exports a number to a decimal string.
 
     :param string $value: Binary string in the form this library accepts
+    :return: String of digits
+
+.. php:function:: to_base(string $value, int $base): bool
+
+    Exports a number to a string in a specified base.
+
+    :param string $value: Binary string in the form this library accepts
+    :param int $base: Number base between 2 and 36
     :return: String of digits

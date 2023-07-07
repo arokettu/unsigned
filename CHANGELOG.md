@@ -2,6 +2,12 @@
 
 ## 1.x
 
+### 1.2.0
+
+*Jul 8, 2023*
+
+* Added functions to convert to and from other number bases
+
 ### 1.1.0
 
 *Mar 9, 2023*
