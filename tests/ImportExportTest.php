@@ -6,9 +6,11 @@ namespace Arokettu\Unsigned\Tests;
 
 use PHPUnit\Framework\TestCase;
 
+use function Arokettu\Unsigned\from_base;
 use function Arokettu\Unsigned\from_dec;
 use function Arokettu\Unsigned\from_hex;
 use function Arokettu\Unsigned\from_int;
+use function Arokettu\Unsigned\to_base;
 use function Arokettu\Unsigned\to_dec;
 use function Arokettu\Unsigned\to_hex;
 use function Arokettu\Unsigned\to_int;
@@ -119,7 +121,7 @@ class ImportExportTest extends TestCase
     public function testFromDecOnlyDigits()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('$value must be a decimal string');
+        $this->expectExceptionMessage('$value contains invalid digits');
 
         from_dec('abc', 16);
     }
@@ -130,5 +132,75 @@ class ImportExportTest extends TestCase
         self::assertEquals('21', to_dec(from_int(123456789, 1)));
         self::assertEquals('0', to_dec(from_int(0, 16)));
         self::assertEquals('340282366920938463463374607431768211455', to_dec(from_int(-1, 16)));
+    }
+
+    public function testToBase()
+    {
+        $num = from_int(-1, 3);
+
+        self::assertEquals('111111111111111111111111', to_base($num, 2));
+        self::assertEquals('77777777', to_base($num, 8));
+        self::assertEquals('16777215', to_base($num, 10));
+        self::assertEquals('5751053', to_base($num, 12));
+        self::assertEquals('3625560', to_base($num, 13));
+        self::assertEquals('ffffff', to_base($num, 16));
+        self::assertEquals('22df2f', to_base($num, 24));
+        self::assertEquals('9zldr', to_base($num, 36));
+    }
+
+    public function testToBaseInvalid()
+    {
+        $num = from_int(-1, 3);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('$base must be between 2 and 36');
+
+        to_base($num, 37);
+    }
+
+    public function testFromBase()
+    {
+        $num = \bin2hex(from_int(-1, 3));
+
+        self::assertEquals($num, \bin2hex(from_base('111111111111111111111111', 2, 3)));
+        self::assertEquals($num, \bin2hex(from_base('77777777', 8, 3)));
+        self::assertEquals($num, \bin2hex(from_base('16777215', 10, 3)));
+        self::assertEquals($num, \bin2hex(from_base('5751053', 12, 3)));
+        self::assertEquals($num, \bin2hex(from_base('3625560', 13, 3)));
+        self::assertEquals($num, \bin2hex(from_base('ffffff', 16, 3)));
+        self::assertEquals($num, \bin2hex(from_base('22df2f', 24, 3)));
+        self::assertEquals($num, \bin2hex(from_base('9zldr', 36, 3)));
+    }
+
+    public function testFromBaseInvalidBase()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('$base must be between 2 and 36');
+
+        from_base('111121111', 1, 3);
+    }
+
+    public function testFromBaseInvalidDigits2()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('$value contains invalid digits');
+
+        from_base('111121111', 2, 3);
+    }
+
+    public function testFromBaseInvalidDigits10()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('$value contains invalid digits');
+
+        from_base('1111a1111', 2, 3);
+    }
+
+    public function testFromBaseInvalidDigits36()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('$value contains invalid digits');
+
+        from_base('1111?111', 2, 3);
     }
 }

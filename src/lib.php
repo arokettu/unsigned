@@ -11,6 +11,15 @@ namespace Arokettu\Unsigned;
 
 use Arokettu\Unsigned as u;
 
+const ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz';
+// array_flip(str_split(ALPHABET))
+const DIGIT_VALUE = [
+    0 => 0, 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 'a' => 10, 'b' => 11, 'c' => 12,
+    'd' => 13, 'e' => 14, 'f' => 15, 'g' => 16, 'h' => 17, 'i' => 18, 'j' => 19, 'k' => 20, 'l' => 21, 'm' => 22,
+    'n' => 23, 'o' => 24, 'p' => 25, 'q' => 26, 'r' => 27, 's' => 28, 't' => 29, 'u' => 30, 'v' => 31, 'w' => 32,
+    'x' => 33, 'y' => 34, 'z' => 35,
+];
+
 function from_int(int $value, int $sizeof): string
 {
     $hex = \dechex($value);
@@ -89,36 +98,65 @@ function to_hex(string $value): string
     return \bin2hex(\strrev($value));
 }
 
-function from_dec(string $value, int $sizeof): string
+function from_base(string $value, int $base, int $sizeof): string
 {
-    if (!\preg_match('/^\d+$/', $value)) {
-        throw new \InvalidArgumentException('$value must be a decimal string');
+    if ($base < 2 || $base > 36) {
+        throw new \InvalidArgumentException('$base must be between 2 and 36');
     }
 
+    $chars = \substr(u\ALPHABET, 0, $base);
+
+    if (!\preg_match("/^[{$chars}]+$/i", $value)) {
+        throw new \InvalidArgumentException('$value contains invalid digits');
+    }
+
+    if ($base === 16) {
+        return u\from_hex($value, $sizeof);
+    }
+
+    $value = \strtolower($value);
     $result = \str_repeat("\0", $sizeof);
 
     for ($i = 0; $i < \strlen($value); $i++) {
         $result = u\add_int(
-            u\mul_int($result, 10),
-            \intval($value[$i])
+            u\mul_int($result, $base),
+            u\DIGIT_VALUE[$value[$i]]
         );
     }
 
     return $result;
 }
 
-function to_dec(string $value): string
+function to_base(string $value, int $base): string
 {
+    if ($base < 2 || $base > 36) {
+        throw new \InvalidArgumentException('$base must be between 2 and 36');
+    }
+
+    if ($base === 16) {
+        return u\to_hex($value);
+    }
+
     $result = '';
 
     $zero = \str_repeat("\0", \strlen($value));
 
     do {
-        list($value, $mod) = u\div_mod_int($value, 10);
-        $result .= \strval($mod);
+        list($value, $mod) = u\div_mod_int($value, $base);
+        $result .= u\ALPHABET[$mod];
     } while ($value !== $zero);
 
     return \strrev($result);
+}
+
+function from_dec(string $value, int $sizeof): string
+{
+    return u\from_base($value, 10, $sizeof);
+}
+
+function to_dec(string $value): string
+{
+    return u\to_base($value, 10);
 }
 
 /**
