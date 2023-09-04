@@ -259,21 +259,22 @@ function add_int(string $a, int $b): string
         return $a;
     }
 
+    $r = $a;
     $carry = $b;
     for ($i = 0; $i < $sizeof; ++$i) {
         if ($carry === 0) {
             break;
         }
-        $newChr = \ord($a[$i]) + $carry;
+        $newChr = \ord($r[$i]) + $carry;
         if (\is_float($newChr)) {
             // overflow, fall back to slower algorithm
             return u\add($a, u\from_int($b, $sizeof));
         }
-        $a[$i] = \chr($newChr);
+        $r[$i] = \chr($newChr);
         $carry = $newChr >> 8;
     }
 
-    return $a;
+    return $r;
 }
 
 /**
@@ -417,18 +418,19 @@ function mul_int(string $a, int $b): string
         return u\mul_int(u\neg($a), -$b);
     }
 
+    $r = $a;
     $carry = 0;
     for ($i = 0; $i < $sizeof; ++$i) {
-        $newChr = \ord($a[$i]) * $b + $carry;
+        $newChr = \ord($r[$i]) * $b + $carry;
         if (\is_float($newChr)) {
             // overflow, fall back to slower algorithm
             return u\mul($a, u\from_int($b, $sizeof), true);
         }
-        $a[$i] = \chr($newChr);
+        $r[$i] = \chr($newChr);
         $carry = $newChr >> 8;
     }
 
-    return $a;
+    return $r;
 }
 
 /**
