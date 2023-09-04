@@ -2,6 +2,12 @@
 
 ## 1.x
 
+### 1.2.1
+
+*Sep 5, 2023*
+
+* Fixed argument corruption on fallback from mul_int to mul
+
 ### 1.2.0
 
 *Jul 8, 2023*
