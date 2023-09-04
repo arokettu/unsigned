@@ -14,7 +14,6 @@ cache:
     # install system packages
     - apt-get update && apt-get install -y git unzip libgmp-dev
     # install extensions
-    - docker-php-ext-install gmp
     - if [ "$INSTALL_XDEBUG" -eq 1 ]; then pecl install xdebug; docker-php-ext-enable xdebug; fi
     # install composer
     - php -r "copy('https://composer.github.io/installer.sig', '/tmp/composer.sig');"
