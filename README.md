@@ -36,6 +36,8 @@ Also on Read the Docs: <https://php-unsigned.readthedocs.io/>
 
 Please file issues on our main repo at GitLab: <https://gitlab.com/sandfox/unsigned/-/issues>
 
+Feel free to ask any questions in our room on Gitter: <https://gitter.im/arokettu/community>
+
 ## License
 
 The library is available as open source under the terms of the [2-Clause BSD License].
