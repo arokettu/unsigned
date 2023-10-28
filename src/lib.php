@@ -316,7 +316,15 @@ function neg(string $a): string
 /**
  * a * b
  */
-function mul(string $a, string $b, bool $forceSlow = false): string
+function mul(string $a, string $b): string
+{
+    return u\_raw_mul($a, $b, false);
+}
+
+/**
+ * @internal
+ */
+function _raw_mul(string $a, string $b, bool $forceSlow): string
 {
     $sizeof = \strlen($a);
     $sizeofb = \strlen($b);
@@ -411,7 +419,7 @@ function mul_int(string $a, int $b): string
     }
     // overflow for the next handler
     if ($b === \PHP_INT_MIN) {
-        return u\mul($a, u\from_int(\PHP_INT_MIN, $sizeof));
+        return u\_raw_mul($a, u\from_int(\PHP_INT_MIN, $sizeof), true);
     }
     // we handle only positive, but we can move the 'sign' to the left
     if ($b < 0) {
@@ -424,7 +432,7 @@ function mul_int(string $a, int $b): string
         $newChr = \ord($r[$i]) * $b + $carry;
         if (\is_float($newChr)) {
             // overflow, fall back to slower algorithm
-            return u\mul($a, u\from_int($b, $sizeof), true);
+            return u\_raw_mul($a, u\from_int($b, $sizeof), true);
         }
         $r[$i] = \chr($newChr);
         $carry = $newChr >> 8;
