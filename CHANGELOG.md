@@ -2,6 +2,12 @@
 
 ## 1.x
 
+### 1.2.2
+
+*Oct 28, 2023*
+
+* Fixed mul signature: internal-only param is removed
+
 ### 1.2.1
 
 *Sep 5, 2023*
