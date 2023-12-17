@@ -120,7 +120,7 @@ class ImportExportTest extends TestCase
 
     public function testFromDecOnlyDigits()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('$value contains invalid digits');
 
         from_dec('abc', 16);
@@ -152,7 +152,7 @@ class ImportExportTest extends TestCase
     {
         $num = from_int(-1, 3);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('$base must be between 2 and 36');
 
         to_base($num, 37);
@@ -174,7 +174,7 @@ class ImportExportTest extends TestCase
 
     public function testFromBaseInvalidBase()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('$base must be between 2 and 36');
 
         from_base('111121111', 1, 3);
@@ -182,7 +182,7 @@ class ImportExportTest extends TestCase
 
     public function testFromBaseInvalidDigits2()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('$value contains invalid digits');
 
         from_base('111121111', 2, 3);
@@ -190,7 +190,7 @@ class ImportExportTest extends TestCase
 
     public function testFromBaseInvalidDigits10()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('$value contains invalid digits');
 
         from_base('1111a1111', 2, 3);
@@ -198,7 +198,7 @@ class ImportExportTest extends TestCase
 
     public function testFromBaseInvalidDigits36()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('$value contains invalid digits');
 
         from_base('1111?111', 2, 3);

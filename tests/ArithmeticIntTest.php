@@ -140,7 +140,7 @@ class ArithmeticIntTest extends TestCase
 
     public function testDivNoZero()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\RangeException::class);
         $this->expectExceptionMessage('Division by zero');
 
         div_int(from_int(123456, 8), 0);
@@ -148,7 +148,7 @@ class ArithmeticIntTest extends TestCase
 
     public function testDivNoNeg()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('$b must be greater than zero. Use div($a, from_int($b)) for unsigned logic');
 
         div_int(from_int(123456, 8), -2);
@@ -189,7 +189,7 @@ class ArithmeticIntTest extends TestCase
 
     public function testDivModNoNeg()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('$b must be greater than zero. Use div_mod($a, from_int($b)) for unsigned logic');
 
         div_mod_int(from_int(123456, 8), -2);
@@ -197,7 +197,7 @@ class ArithmeticIntTest extends TestCase
 
     public function testModNoZero()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\RangeException::class);
         $this->expectExceptionMessage('Modulo by zero');
 
         mod_int(from_int(123456, 8), 0);
@@ -205,7 +205,7 @@ class ArithmeticIntTest extends TestCase
 
     public function testModNoNeg()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('$b must be greater than zero. Use mod($a, from_int($b)) for unsigned logic');
 
         mod_int(from_int(123456, 8), -2);

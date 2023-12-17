@@ -37,7 +37,7 @@ class ArithmeticTest extends TestCase
 
     public function testSumDifferentSizes()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Arguments must be the same size, 1 and 2 bytes given');
 
         add("\0", "\0\0");
@@ -78,7 +78,7 @@ class ArithmeticTest extends TestCase
 
     public function testSubDifferentSizes()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Arguments must be the same size, 1 and 2 bytes given');
 
         sub("\0", "\0\0");
@@ -190,7 +190,7 @@ class ArithmeticTest extends TestCase
 
     public function testMulDifferentSizes()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Arguments must be the same size, 1 and 2 bytes given');
 
         mul("\0", "\0\0");
@@ -244,7 +244,7 @@ class ArithmeticTest extends TestCase
 
     public function testDivDifferentSizes()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Arguments must be the same size, 1 and 2 bytes given');
 
         div("\0", "\0\0");
@@ -252,7 +252,7 @@ class ArithmeticTest extends TestCase
 
     public function testDivNoZero()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\RangeException::class);
         $this->expectExceptionMessage('Division by zero');
 
         div(from_int(123456, 8), from_int(0, 8));
@@ -311,7 +311,7 @@ class ArithmeticTest extends TestCase
 
     public function testModNoZero()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\RangeException::class);
         $this->expectExceptionMessage('Modulo by zero');
 
         mod(from_int(123456, 8), from_int(0, 8));
@@ -319,7 +319,7 @@ class ArithmeticTest extends TestCase
 
     public function testModDifferentSizes()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Arguments must be the same size, 1 and 2 bytes given');
 
         mod("\0", "\0\0");

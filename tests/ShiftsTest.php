@@ -32,7 +32,7 @@ class ShiftsTest extends TestCase
 
     public function testNonNegLeftShift()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('$shift must be non negative');
 
         shift_left("\0", -1);
@@ -40,7 +40,7 @@ class ShiftsTest extends TestCase
 
     public function testNonNegRightShift()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('$shift must be non negative');
 
         shift_right("\0", -1);

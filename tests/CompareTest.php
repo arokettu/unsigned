@@ -24,7 +24,7 @@ class CompareTest extends TestCase
 
     public function testCompareDifferentSizes()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Arguments must be the same size, 2 and 4 bytes given');
 
         compare(from_int(1, 2), from_int(1, 4));

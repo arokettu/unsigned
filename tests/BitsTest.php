@@ -30,7 +30,7 @@ class BitsTest extends TestCase
 
     public function testIsSetBitUnderflow()
     {
-        $this->expectException(\UnderflowException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Bit must be in range 0-63');
 
         is_bit_set(from_int(0b1111000011001100, 8), -2);
@@ -38,7 +38,7 @@ class BitsTest extends TestCase
 
     public function testIsSetBitOverflow()
     {
-        $this->expectException(\OverflowException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Bit must be in range 0-63');
 
         is_bit_set(from_int(0b1111000011001100, 8), 100);
@@ -58,7 +58,7 @@ class BitsTest extends TestCase
 
     public function testSetBitUnderflow()
     {
-        $this->expectException(\UnderflowException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Bit must be in range 0-63');
 
         set_bit(from_int(0b1111000011001100, 8), -2);
@@ -66,7 +66,7 @@ class BitsTest extends TestCase
 
     public function testSetBitOverflow()
     {
-        $this->expectException(\OverflowException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Bit must be in range 0-63');
 
         set_bit(from_int(0b1111000011001100, 8), 100);
@@ -86,7 +86,7 @@ class BitsTest extends TestCase
 
     public function testUnsetBitUnderflow()
     {
-        $this->expectException(\UnderflowException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Bit must be in range 0-63');
 
         unset_bit(from_int(0b1111000011001100, 8), -2);
@@ -94,7 +94,7 @@ class BitsTest extends TestCase
 
     public function testUnsetBitOverflow()
     {
-        $this->expectException(\OverflowException::class);
+        $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Bit must be in range 0-63');
 
         unset_bit(from_int(0b1111000011001100, 8), 100);

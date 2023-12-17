@@ -101,13 +101,13 @@ function to_hex(string $value): string
 function from_base(string $value, int $base, int $sizeof): string
 {
     if ($base < 2 || $base > 36) {
-        throw new \InvalidArgumentException('$base must be between 2 and 36');
+        throw new \DomainException('$base must be between 2 and 36');
     }
 
     $chars = \substr(u\ALPHABET, 0, $base);
 
     if (!\preg_match("/^[{$chars}]+$/i", $value)) {
-        throw new \InvalidArgumentException('$value contains invalid digits');
+        throw new \DomainException('$value contains invalid digits');
     }
 
     if ($base === 16) {
@@ -130,7 +130,7 @@ function from_base(string $value, int $base, int $sizeof): string
 function to_base(string $value, int $base): string
 {
     if ($base < 2 || $base > 36) {
-        throw new \InvalidArgumentException('$base must be between 2 and 36');
+        throw new \DomainException('$base must be between 2 and 36');
     }
 
     if ($base === 16) {
@@ -167,7 +167,7 @@ function shift_left(string $value, int $shift): string
     $sizeof = \strlen($value);
 
     if ($shift < 0) {
-        throw new \InvalidArgumentException('$shift must be non negative');
+        throw new \DomainException('$shift must be non negative');
     }
     if ($shift >= $sizeof * 8) {
         return \str_repeat("\0", $sizeof);
@@ -199,7 +199,7 @@ function shift_right(string $value, int $shift): string
     $sizeof = \strlen($value);
 
     if ($shift < 0) {
-        throw new \InvalidArgumentException('$shift must be non negative');
+        throw new \DomainException('$shift must be non negative');
     }
     if ($shift >= $sizeof * 8) {
         return \str_repeat("\0", $sizeof);
@@ -235,7 +235,7 @@ function add(string $a, string $b): string
     $sizeof = \strlen($a);
     $sizeofb = \strlen($b);
     if ($sizeof !== $sizeofb) {
-        throw new \InvalidArgumentException("Arguments must be the same size, $sizeof and $sizeofb bytes given");
+        throw new \DomainException("Arguments must be the same size, $sizeof and $sizeofb bytes given");
     }
 
     $carry = 0;
@@ -329,7 +329,7 @@ function _raw_mul(string $a, string $b, bool $forceSlow): string
     $sizeof = \strlen($a);
     $sizeofb = \strlen($b);
     if ($sizeof !== $sizeofb) {
-        throw new \InvalidArgumentException("Arguments must be the same size, $sizeof and $sizeofb bytes given");
+        throw new \DomainException("Arguments must be the same size, $sizeof and $sizeofb bytes given");
     }
     // if we're lucky to have a small $a
     if (!$forceSlow && u\fits_into_int($a)) {
@@ -451,7 +451,7 @@ function div_mod(string $a, string $b, bool $forceSlow = false): array
     $sizeof = \strlen($a);
     $sizeofb = \strlen($b);
     if ($sizeof !== $sizeofb) {
-        throw new \InvalidArgumentException("Arguments must be the same size, $sizeof and $sizeofb bytes given");
+        throw new \DomainException("Arguments must be the same size, $sizeof and $sizeofb bytes given");
     }
 
     // special cases
@@ -469,7 +469,7 @@ function div_mod(string $a, string $b, bool $forceSlow = false): array
     }
     // 0
     if ($b === $zero) {
-        throw new \InvalidArgumentException('Division by zero');
+        throw new \RangeException('Division by zero');
     }
     // 1
     if ($b === $one) {
@@ -530,7 +530,7 @@ function div_mod_int(string $a, int $b): array
 
     // special cases
     if ($b === 0) {
-        throw new \InvalidArgumentException('Division by zero');
+        throw new \RangeException('Division by zero');
     }
     if ($b === 1) {
         return [$a, 0];
@@ -548,7 +548,7 @@ function div_mod_int(string $a, int $b): array
     }
     // can't handle negative, convert to unsigned first
     if ($b < 0) {
-        throw new \InvalidArgumentException(
+        throw new \DomainException(
             '$b must be greater than zero. Use div_mod($a, from_int($b)) for unsigned logic'
         );
     }
@@ -585,7 +585,7 @@ function div_int(string $a, int $b): string
     // can't handle negative, convert to unsigned first
     // custom message
     if ($b < 0) {
-        throw new \InvalidArgumentException(
+        throw new \DomainException(
             '$b must be greater than zero. Use div($a, from_int($b)) for unsigned logic'
         );
     }
@@ -601,7 +601,7 @@ function mod(string $a, string $b): string
     $sizeof = \strlen($a);
     $sizeofb = \strlen($b);
     if ($sizeof !== $sizeofb) {
-        throw new \InvalidArgumentException("Arguments must be the same size, $sizeof and $sizeofb bytes given");
+        throw new \DomainException("Arguments must be the same size, $sizeof and $sizeofb bytes given");
     }
 
     // special cases
@@ -617,7 +617,7 @@ function mod(string $a, string $b): string
     }
     // 0
     if ($b === $zero) {
-        throw new \InvalidArgumentException('Modulo by zero');
+        throw new \RangeException('Modulo by zero');
     }
     // 1
     $one = $zero;
@@ -648,7 +648,7 @@ function mod_int(string $a, int $b): int
 
     // special cases
     if ($b === 0) {
-        throw new \InvalidArgumentException('Modulo by zero');
+        throw new \RangeException('Modulo by zero');
     }
     if ($b === 1) {
         return 0;
@@ -659,7 +659,7 @@ function mod_int(string $a, int $b): int
     }
     // can't handle negative, convert to unsigned first
     if ($b < 0) {
-        throw new \InvalidArgumentException(
+        throw new \DomainException(
             '$b must be greater than zero. Use mod($a, from_int($b)) for unsigned logic'
         );
     }
@@ -686,7 +686,7 @@ function compare(string $a, string $b): int
     $sizeof = \strlen($a);
     $sizeofb = \strlen($b);
     if ($sizeof !== $sizeofb) {
-        throw new \InvalidArgumentException("Arguments must be the same size, $sizeof and $sizeofb bytes given");
+        throw new \DomainException("Arguments must be the same size, $sizeof and $sizeofb bytes given");
     }
 
     $i = $sizeof;
@@ -703,10 +703,10 @@ function set_bit(string $a, int $bit): string
 {
     $sizeof = \strlen($a);
     if ($bit < 0) {
-        throw new \UnderflowException("Bit must be in range 0-" . ($sizeof * 8 - 1));
+        throw new \DomainException("Bit must be in range 0-" . ($sizeof * 8 - 1));
     }
     if ($bit > $sizeof * 8) {
-        throw new \OverflowException("Bit must be in range 0-" . ($sizeof * 8 - 1));
+        throw new \DomainException("Bit must be in range 0-" . ($sizeof * 8 - 1));
     }
 
     $byte = $bit >> 3;
@@ -722,10 +722,10 @@ function unset_bit(string $a, int $bit): string
 {
     $sizeof = \strlen($a);
     if ($bit < 0) {
-        throw new \UnderflowException("Bit must be in range 0-" . ($sizeof * 8 - 1));
+        throw new \DomainException("Bit must be in range 0-" . ($sizeof * 8 - 1));
     }
     if ($bit > $sizeof * 8) {
-        throw new \OverflowException("Bit must be in range 0-" . ($sizeof * 8 - 1));
+        throw new \DomainException("Bit must be in range 0-" . ($sizeof * 8 - 1));
     }
 
     $byte = $bit >> 3;
@@ -741,10 +741,10 @@ function is_bit_set(string $a, int $bit): bool
 {
     $sizeof = \strlen($a);
     if ($bit < 0) {
-        throw new \UnderflowException("Bit must be in range 0-" . ($sizeof * 8 - 1));
+        throw new \DomainException("Bit must be in range 0-" . ($sizeof * 8 - 1));
     }
     if ($bit > $sizeof * 8) {
-        throw new \OverflowException("Bit must be in range 0-" . ($sizeof * 8 - 1));
+        throw new \DomainException("Bit must be in range 0-" . ($sizeof * 8 - 1));
     }
 
     $byte = $bit >> 3;
