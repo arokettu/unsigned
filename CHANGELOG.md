@@ -2,6 +2,13 @@
 
 ## 1.x
 
+### 1.3.0
+
+*Dec 17, 2023*
+
+* Exception rework.
+  The library now throws DomainException for wrong arguments and RangeException for arithmetic problems.
+
 ### 1.2.2
 
 *Oct 28, 2023*
