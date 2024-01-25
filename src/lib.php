@@ -686,9 +686,9 @@ namespace Arokettu\Unsigned\Internal
     const MAX_ADD = \PHP_INT_MAX - 255;
     /**
      * @internal
-     * Max-ish integer that can be multiplied by a byte without overflowing (+ carry)
+     * Max integer that can be multiplied by a byte without overflowing (+ carry)
      */
-    const MAX_MUL = \PHP_INT_MAX >> 8;
+    const MAX_MUL = (\PHP_INT_MAX >> 8) + 1;
 
     /**
      * @internal
