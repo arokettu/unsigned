@@ -246,6 +246,9 @@ namespace Arokettu\Unsigned
         if ($b === 0) {
             return $a;
         }
+        if ($b > i\MAX_ADD) {
+            return u\add($a, u\from_int($b, $sizeof));
+        }
 
         $r = $a;
         $carry = $b;
@@ -254,10 +257,6 @@ namespace Arokettu\Unsigned
                 break;
             }
             $newChr = \ord($r[$i]) + $carry;
-            if (\is_float($newChr)) {
-                // overflow, fall back to slower algorithm
-                return u\add($a, u\from_int($b, $sizeof));
-            }
             $r[$i] = \chr($newChr);
             $carry = $newChr >> 8;
         }
@@ -674,7 +673,6 @@ namespace Arokettu\Unsigned\Internal
      * @internal
      */
     const ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz';
-
     /**
      * @internal
      */
@@ -684,6 +682,12 @@ namespace Arokettu\Unsigned\Internal
         'n' => 23, 'o' => 24, 'p' => 25, 'q' => 26, 'r' => 27, 's' => 28, 't' => 29, 'u' => 30, 'v' => 31, 'w' => 32,
         'x' => 33, 'y' => 34, 'z' => 35,
     ]; // array_flip(str_split(ALPHABET))
+
+    /**
+     * @internal
+     * Max integer that can be added to a byte without overflowing
+     */
+    const MAX_ADD = \PHP_INT_MAX - 255;
 
     /**
      * @internal
