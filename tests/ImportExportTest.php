@@ -136,6 +136,20 @@ class ImportExportTest extends TestCase
 
     public function testToBase()
     {
+        $num = from_int(123, 3);
+
+        self::assertEquals('1111011', to_base($num, 2));
+        self::assertEquals('173', to_base($num, 8));
+        self::assertEquals('123', to_base($num, 10));
+        self::assertEquals('a3', to_base($num, 12));
+        self::assertEquals('96', to_base($num, 13));
+        self::assertEquals('7b', to_base($num, 16));
+        self::assertEquals('53', to_base($num, 24));
+        self::assertEquals('3f', to_base($num, 36));
+    }
+
+    public function testToBaseMax()
+    {
         $num = from_int(-1, 3);
 
         self::assertEquals('111111111111111111111111', to_base($num, 2));
@@ -146,6 +160,16 @@ class ImportExportTest extends TestCase
         self::assertEquals('ffffff', to_base($num, 16));
         self::assertEquals('22df2f', to_base($num, 24));
         self::assertEquals('9zldr', to_base($num, 36));
+    }
+
+    public function testToBase16()
+    {
+        $num = from_int(31415926, 8);
+
+        // while from_base(..., 16) and from_hex(...) are equivalent,
+        // to_base(..., 16) and to_hex(...) are not
+        self::assertEquals('1df5e76', to_base($num, 16));
+        self::assertEquals('0000000001df5e76', to_hex($num));
     }
 
     public function testToBaseInvalid()
