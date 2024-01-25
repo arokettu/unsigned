@@ -9,11 +9,13 @@ use PHPUnit\Framework\TestCase;
 use function Arokettu\Unsigned\add_int;
 use function Arokettu\Unsigned\div_int;
 use function Arokettu\Unsigned\div_mod_int;
+use function Arokettu\Unsigned\from_hex;
 use function Arokettu\Unsigned\from_int;
 use function Arokettu\Unsigned\mod_int;
 use function Arokettu\Unsigned\mul_int;
 use function Arokettu\Unsigned\sub_int;
 use function Arokettu\Unsigned\sub_int_rev;
+use function Arokettu\Unsigned\to_hex;
 use function Arokettu\Unsigned\to_int;
 
 class ArithmeticIntTest extends TestCase
@@ -44,6 +46,56 @@ class ArithmeticIntTest extends TestCase
         self::assertEquals(
             from_int(-2, \PHP_INT_SIZE),
             add_int(from_int(\PHP_INT_MAX, \PHP_INT_SIZE), \PHP_INT_MAX)
+        );
+    }
+
+    public function testAddOverlfow64()
+    {
+        if (\PHP_INT_SIZE < 8) {
+            $this->markTestSkipped();
+        }
+
+        $maxAdd = 9223372036854775552;
+        $overflow = 9223372036854775553;
+
+        self::assertEquals(
+            '7fffffffffffffff',
+            to_hex(add_int(from_hex("ff", 8), $maxAdd))
+        );
+        self::assertEquals(
+            '800000000000feff',
+            to_hex(add_int(from_hex("ffff", 8), $maxAdd))
+        );
+        self::assertEquals(
+            '8000000000000000',
+            to_hex(add_int(from_hex("ff", 8), $overflow))
+        );
+        self::assertEquals(
+            '800000000000ff00',
+            to_hex(add_int(from_hex("ffff", 8), $overflow))
+        );
+    }
+
+    public function testAddOverlfow32()
+    {
+        $maxAdd = 2147483392;
+        $overflow = 2147483393;
+
+        self::assertEquals(
+            '7fffffff',
+            to_hex(add_int(from_hex("ff", 4), $maxAdd))
+        );
+        self::assertEquals(
+            '8000feff',
+            to_hex(add_int(from_hex("ffff", 4), $maxAdd))
+        );
+        self::assertEquals(
+            '80000000',
+            to_hex(add_int(from_hex("ff", 4), $overflow))
+        );
+        self::assertEquals(
+            '8000ff00',
+            to_hex(add_int(from_hex("ffff", 4), $overflow))
         );
     }
 
