@@ -279,7 +279,7 @@ namespace Arokettu\Unsigned
     {
         // handle overflow on negative
         if ($b === \PHP_INT_MIN) {
-            return u\sub($a, u\from_int(\PHP_INT_MIN, \strlen($a)));
+            return u\sub($a, u\from_int($b, \strlen($a)));
         }
         return u\add_int($a, -$b);
     }
@@ -326,8 +326,8 @@ namespace Arokettu\Unsigned
             return u\neg($a);
         }
         // overflow for the next handler
-        if ($b === \PHP_INT_MIN) {
-            return i\_raw_mul($a, u\from_int(\PHP_INT_MIN, $sizeof), true);
+        if ($b === \PHP_INT_MIN || $b > i\MAX_MUL) {
+            return i\_raw_mul($a, u\from_int($b, $sizeof), true);
         }
         // we handle only positive, but we can move the 'sign' to the left
         if ($b < 0) {
@@ -338,10 +338,6 @@ namespace Arokettu\Unsigned
         $carry = 0;
         for ($i = 0; $i < $sizeof; ++$i) {
             $newChr = \ord($r[$i]) * $b + $carry;
-            if (\is_float($newChr)) {
-                // overflow, fall back to slower algorithm
-                return i\_raw_mul($a, u\from_int($b, $sizeof), true);
-            }
             $r[$i] = \chr($newChr);
             $carry = $newChr >> 8;
         }
@@ -688,6 +684,11 @@ namespace Arokettu\Unsigned\Internal
      * Max integer that can be added to a byte without overflowing
      */
     const MAX_ADD = \PHP_INT_MAX - 255;
+    /**
+     * @internal
+     * Max-ish integer that can be multiplied by a byte without overflowing (+ carry)
+     */
+    const MAX_MUL = \PHP_INT_MAX >> 8;
 
     /**
      * @internal
@@ -701,11 +702,17 @@ namespace Arokettu\Unsigned\Internal
         }
         // if we're lucky to have a small $a
         if (!$forceSlow && u\fits_into_int($a)) {
-            return u\mul_int($b, u\to_int($a));
+            $ai = u\to_int($a);
+            if ($ai <= i\MAX_MUL) {
+                return u\mul_int($b, $ai);
+            }
         }
         // or $b
         if (!$forceSlow && u\fits_into_int($b)) {
-            return u\mul_int($a, u\to_int($b));
+            $bi = u\to_int($b);
+            if ($bi <= i\MAX_MUL) {
+                return u\mul_int($a, $bi);
+            }
         }
 
         return \PHP_INT_SIZE >= 8 ? i\_raw_mul64($a, $b, $sizeof) : i\_raw_mul32($a, $b, $sizeof);
