@@ -133,10 +133,6 @@ function to_base(string $value, int $base): string
         throw new \DomainException('$base must be between 2 and 36');
     }
 
-    if ($base === 16) {
-        return u\to_hex($value);
-    }
-
     $result = '';
 
     $zero = \str_repeat("\0", \strlen($value));
