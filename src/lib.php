@@ -10,15 +10,7 @@ declare(strict_types=1);
 namespace Arokettu\Unsigned
 {
     use Arokettu\Unsigned as u;
-
-    const ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz';
-// array_flip(str_split(ALPHABET))
-    const DIGIT_VALUE = [
-        0 => 0, 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 'a' => 10, 'b' => 11, 'c' => 12,
-        'd' => 13, 'e' => 14, 'f' => 15, 'g' => 16, 'h' => 17, 'i' => 18, 'j' => 19, 'k' => 20, 'l' => 21, 'm' => 22,
-        'n' => 23, 'o' => 24, 'p' => 25, 'q' => 26, 'r' => 27, 's' => 28, 't' => 29, 'u' => 30, 'v' => 31, 'w' => 32,
-        'x' => 33, 'y' => 34, 'z' => 35,
-    ];
+    use Arokettu\Unsigned\Internal as i;
 
     function from_int(int $value, int $sizeof): string
     {
@@ -104,7 +96,7 @@ namespace Arokettu\Unsigned
             throw new \DomainException('$base must be between 2 and 36');
         }
 
-        $chars = \substr(u\ALPHABET, 0, $base);
+        $chars = \substr(i\ALPHABET, 0, $base);
 
         if (!\preg_match("/^[{$chars}]+$/i", $value)) {
             throw new \DomainException('$value contains invalid digits');
@@ -120,7 +112,7 @@ namespace Arokettu\Unsigned
         for ($i = 0; $i < \strlen($value); $i++) {
             $result = u\add_int(
                 u\mul_int($result, $base),
-                u\DIGIT_VALUE[$value[$i]]
+                i\DIGIT_VALUE[$value[$i]]
             );
         }
 
@@ -139,7 +131,7 @@ namespace Arokettu\Unsigned
 
         do {
             list($value, $mod) = u\div_mod_int($value, $base);
-            $result .= u\ALPHABET[$mod];
+            $result .= i\ALPHABET[$mod];
         } while ($value !== $zero);
 
         return \strrev($result);
@@ -314,86 +306,7 @@ namespace Arokettu\Unsigned
      */
     function mul(string $a, string $b): string
     {
-        return u\_raw_mul($a, $b, false);
-    }
-
-    /**
-     * @internal
-     */
-    function _raw_mul(string $a, string $b, bool $forceSlow): string
-    {
-        $sizeof = \strlen($a);
-        $sizeofb = \strlen($b);
-        if ($sizeof !== $sizeofb) {
-            throw new \DomainException("Arguments must be the same size, $sizeof and $sizeofb bytes given");
-        }
-        // if we're lucky to have a small $a
-        if (!$forceSlow && u\fits_into_int($a)) {
-            return u\mul_int($b, u\to_int($a));
-        }
-        // or $b
-        if (!$forceSlow && u\fits_into_int($b)) {
-            return u\mul_int($a, u\to_int($b));
-        }
-
-        return \PHP_INT_SIZE >= 8 ? u\_raw_mul64($a, $b, $sizeof) : u\_raw_mul32($a, $b, $sizeof);
-    }
-
-    /**
-     * @internal
-     */
-    function _raw_mul32(string $a, string $b, int $sizeof): string
-    {
-        $newval = \str_repeat("\0", $sizeof);
-
-        for ($i = 0; $i < $sizeof; $i++) {
-            $carry = 0;
-            $ord = \ord($a[$i]);
-            for ($j = 0; $j < $sizeof - $i; $j++) {
-                $idx = $i + $j;
-
-                $newChr = $ord * \ord($b[$j]) + \ord($newval[$idx]) + $carry;
-                $newval[$idx] = \chr($newChr);
-                $carry = $newChr >> 8;
-            }
-        }
-
-        return $newval;
-    }
-
-    /**
-     * @internal
-     */
-    function _raw_mul64(string $a, string $b, int $sizeof): string
-    {
-        // we can safely process 3 (PHP_INT_SIZE-1 div 2) on 64-bit systems
-
-        $m = $sizeof % 3;
-        $sizeofPadded = $m ? $sizeof + 3 - $m : $sizeof;
-
-        $a = \str_pad($a, $sizeofPadded, "\0", \STR_PAD_RIGHT);
-        $b = \str_pad($b, $sizeofPadded, "\0", \STR_PAD_RIGHT);
-        $newval = \str_repeat("\0", $sizeofPadded);
-
-        for ($i = 0; $i < $sizeof; $i += 3) {
-            $carry = 0;
-            $ordI = \ord($a[$i + 2]) << 16 | \ord($a[$i + 1]) << 8 | \ord($a[$i]);
-            for ($j = 0; $j < $sizeof - $i; $j += 3) {
-                $idx = $i + $j;
-                $ordJ = \ord($b[$j + 2]) << 16 | \ord($b[$j + 1]) << 8 | \ord($b[$j]);
-                $ordNewval = \ord($newval[$idx + 2]) << 16 | \ord($newval[$idx + 1]) << 8 | \ord($newval[$idx]);
-
-                $newChr = $ordI * $ordJ + $ordNewval + $carry;
-                $newval[$idx] = \chr($newChr);
-                $newChr >>= 8;
-                $newval[$idx + 1] = \chr($newChr);
-                $newChr >>= 8;
-                $newval[$idx + 2] = \chr($newChr);
-                $carry = $newChr >> 8;
-            }
-        }
-
-        return $sizeofPadded === $sizeof ? $newval : \substr($newval, 0, $sizeof);
+        return i\_raw_mul($a, $b, false);
     }
 
     /**
@@ -415,7 +328,7 @@ namespace Arokettu\Unsigned
         }
         // overflow for the next handler
         if ($b === \PHP_INT_MIN) {
-            return u\_raw_mul($a, u\from_int(\PHP_INT_MIN, $sizeof), true);
+            return i\_raw_mul($a, u\from_int(\PHP_INT_MIN, $sizeof), true);
         }
         // we handle only positive, but we can move the 'sign' to the left
         if ($b < 0) {
@@ -428,7 +341,7 @@ namespace Arokettu\Unsigned
             $newChr = \ord($r[$i]) * $b + $carry;
             if (\is_float($newChr)) {
                 // overflow, fall back to slower algorithm
-                return u\_raw_mul($a, u\from_int($b, $sizeof), true);
+                return i\_raw_mul($a, u\from_int($b, $sizeof), true);
             }
             $r[$i] = \chr($newChr);
             $carry = $newChr >> 8;
@@ -748,5 +661,106 @@ namespace Arokettu\Unsigned
         $bitmask = 1 << $bit;
 
         return (\ord($a[$byte]) & $bitmask) > 1;
+    }
+}
+
+/** @internal */
+namespace Arokettu\Unsigned\Internal
+{
+    use Arokettu\Unsigned as u;
+    use Arokettu\Unsigned\Internal as i;
+
+    /**
+     * @internal
+     */
+    const ALPHABET = '0123456789abcdefghijklmnopqrstuvwxyz';
+
+    /**
+     * @internal
+     */
+    const DIGIT_VALUE = [
+        0 => 0, 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 'a' => 10, 'b' => 11, 'c' => 12,
+        'd' => 13, 'e' => 14, 'f' => 15, 'g' => 16, 'h' => 17, 'i' => 18, 'j' => 19, 'k' => 20, 'l' => 21, 'm' => 22,
+        'n' => 23, 'o' => 24, 'p' => 25, 'q' => 26, 'r' => 27, 's' => 28, 't' => 29, 'u' => 30, 'v' => 31, 'w' => 32,
+        'x' => 33, 'y' => 34, 'z' => 35,
+    ]; // array_flip(str_split(ALPHABET))
+
+    /**
+     * @internal
+     */
+    function _raw_mul(string $a, string $b, bool $forceSlow): string
+    {
+        $sizeof = \strlen($a);
+        $sizeofb = \strlen($b);
+        if ($sizeof !== $sizeofb) {
+            throw new \DomainException("Arguments must be the same size, $sizeof and $sizeofb bytes given");
+        }
+        // if we're lucky to have a small $a
+        if (!$forceSlow && u\fits_into_int($a)) {
+            return u\mul_int($b, u\to_int($a));
+        }
+        // or $b
+        if (!$forceSlow && u\fits_into_int($b)) {
+            return u\mul_int($a, u\to_int($b));
+        }
+
+        return \PHP_INT_SIZE >= 8 ? i\_raw_mul64($a, $b, $sizeof) : i\_raw_mul32($a, $b, $sizeof);
+    }
+
+    /**
+     * @internal
+     */
+    function _raw_mul32(string $a, string $b, int $sizeof): string
+    {
+        $newval = \str_repeat("\0", $sizeof);
+
+        for ($i = 0; $i < $sizeof; $i++) {
+            $carry = 0;
+            $ord = \ord($a[$i]);
+            for ($j = 0; $j < $sizeof - $i; $j++) {
+                $idx = $i + $j;
+
+                $newChr = $ord * \ord($b[$j]) + \ord($newval[$idx]) + $carry;
+                $newval[$idx] = \chr($newChr);
+                $carry = $newChr >> 8;
+            }
+        }
+
+        return $newval;
+    }
+
+    /**
+     * @internal
+     */
+    function _raw_mul64(string $a, string $b, int $sizeof): string
+    {
+        // we can safely process 3 (PHP_INT_SIZE-1 div 2) on 64-bit systems
+
+        $m = $sizeof % 3;
+        $sizeofPadded = $m ? $sizeof + 3 - $m : $sizeof;
+
+        $a = \str_pad($a, $sizeofPadded, "\0", \STR_PAD_RIGHT);
+        $b = \str_pad($b, $sizeofPadded, "\0", \STR_PAD_RIGHT);
+        $newval = \str_repeat("\0", $sizeofPadded);
+
+        for ($i = 0; $i < $sizeof; $i += 3) {
+            $carry = 0;
+            $ordI = \ord($a[$i + 2]) << 16 | \ord($a[$i + 1]) << 8 | \ord($a[$i]);
+            for ($j = 0; $j < $sizeof - $i; $j += 3) {
+                $idx = $i + $j;
+                $ordJ = \ord($b[$j + 2]) << 16 | \ord($b[$j + 1]) << 8 | \ord($b[$j]);
+                $ordNewval = \ord($newval[$idx + 2]) << 16 | \ord($newval[$idx + 1]) << 8 | \ord($newval[$idx]);
+
+                $newChr = $ordI * $ordJ + $ordNewval + $carry;
+                $newval[$idx] = \chr($newChr);
+                $newChr >>= 8;
+                $newval[$idx + 1] = \chr($newChr);
+                $newChr >>= 8;
+                $newval[$idx + 2] = \chr($newChr);
+                $carry = $newChr >> 8;
+            }
+        }
+
+        return $sizeofPadded === $sizeof ? $newval : \substr($newval, 0, $sizeof);
     }
 }
