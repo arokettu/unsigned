@@ -181,6 +181,40 @@ class ArithmeticIntTest extends TestCase
         );
     }
 
+    public function testMulOverflow64()
+    {
+        if (\PHP_INT_SIZE < 8) {
+            $this->markTestSkipped();
+        }
+
+        $maxMul = 0x80000000000000;
+        $overflow = 0x80000000000001;
+
+        self::assertEquals(
+            '007fffffffffffffff80000000000000',
+            to_hex(mul_int(from_hex("ffffffffffffffff", 16), $maxMul))
+        );
+        self::assertEquals(
+            '0080000000000000ff7fffffffffffff',
+            to_hex(mul_int(from_hex("ffffffffffffffff", 16), $overflow))
+        );
+    }
+
+    public function testMulOverflow32()
+    {
+        $maxMul = 0x800000;
+        $overflow = 0x800001;
+
+        self::assertEquals(
+            '007fffffff800000',
+            to_hex(mul_int(from_hex("ffffffff", 8), $maxMul))
+        );
+        self::assertEquals(
+            '00800000ff7fffff',
+            to_hex(mul_int(from_hex("ffffffff", 8), $overflow))
+        );
+    }
+
     public function testDiv()
     {
         self::assertEquals(\intdiv(123456, 1000), to_int(div_int(from_int(123456, 8), 1000)));
