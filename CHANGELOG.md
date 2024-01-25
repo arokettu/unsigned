@@ -2,6 +2,12 @@
 
 ## 1.x
 
+### 1.3.1
+
+*Jan 25, 2024*
+
+* Fixed `to_base(..., 16)` generating values with leading zeros while other bases do not
+
 ### 1.3.0
 
 *Dec 17, 2023*
