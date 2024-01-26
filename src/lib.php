@@ -666,7 +666,7 @@ namespace Arokettu\Unsigned
         $bit &= 7;
         $bitmask = 1 << $bit;
 
-        return (\ord($a[$byte]) & $bitmask) > 1;
+        return (\ord($a[$byte]) & $bitmask) !== 0;
     }
 }
 
