@@ -307,6 +307,15 @@ class ArithmeticTest extends TestCase
                 from_hex('112210f47de98116', 8)  // 1234567890123456790
             ))
         );
+
+        // big pow2
+        self::assertEquals(
+            from_hex('445566778899aabbccddeeff00', 16),
+            mod(
+                from_hex('112233445566778899aabbccddeeff00', 16),
+                from_hex('00000100000000000000000000000000', 16)
+            )
+        );
     }
 
     public function testModNoZero()

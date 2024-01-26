@@ -432,12 +432,23 @@ namespace Arokettu\Unsigned
     {
         $sizeof = \strlen($a);
 
+        // can't handle negative, convert to unsigned first
+        if ($b < 0) {
+            throw new \DomainException(
+                '$b must be greater than zero. Use div_mod($a, from_int($b)) for unsigned logic'
+            );
+        }
         // special cases
         if ($b === 0) {
             throw new \RangeException('Division by zero');
         }
         if ($b === 1) {
             return [$a, 0];
+        }
+        // fits into int, just calculate natively
+        if (u\fits_into_int($a)) {
+            $ai = u\to_int($a);
+            return [u\from_int(\intdiv($ai, $b), $sizeof), $ai % $b];
         }
         // for pow2 just cut the required bits
         if (($b & ($b - 1)) === 0) {
@@ -450,11 +461,10 @@ namespace Arokettu\Unsigned
                 u\to_int($a & u\from_int($b - 1, $sizeof)),
             ];
         }
-        // can't handle negative, convert to unsigned first
-        if ($b < 0) {
-            throw new \DomainException(
-                '$b must be greater than zero. Use div_mod($a, from_int($b)) for unsigned logic'
-            );
+        // catch possible overflow
+        if ($b > i\MAX_DIV) {
+            $divmod = u\div_mod($a, u\from_int($b, $sizeof), true);
+            return [$divmod[0], u\to_int($divmod[1])];
         }
 
         $mod = 0;
@@ -462,10 +472,6 @@ namespace Arokettu\Unsigned
         $i = $sizeof;
         while ($i--) {
             $dividend = $mod << 8 | \ord($a[$i]);
-            if ($dividend < 0 || !\is_int($dividend)) {
-                $divmod = u\div_mod($a, u\from_int($b, $sizeof), true);
-                return [$divmod[0], u\to_int($divmod[1])];
-            }
             $div[$i] = \chr(\intdiv($dividend, $b));
             $mod = $dividend % $b;
         }

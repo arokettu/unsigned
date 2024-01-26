@@ -306,6 +306,14 @@ class ArithmeticIntTest extends TestCase
             div_mod_int(from_int(123456, 8), 123456)[1],
             mod_int(from_int(123456, 8), 123456)
         );
+        // big pow2
+        self::assertEquals(
+            [\strrev(\hex2bin('000000112233445566778899aabbccdd')), 0xeeff00],
+            div_mod_int(
+                from_hex('112233445566778899aabbccddeeff00', 16),
+                2 ** 24
+            )
+        );
     }
 
     public function testDivModNoNeg()
