@@ -247,6 +247,41 @@ class ArithmeticIntTest extends TestCase
         self::assertEquals(123456 % 1024, mod_int(from_int(123456, 8), 1024));
         self::assertEquals(123456 % 654321, mod_int(from_int(123456, 8), 654321));
         self::assertEquals(123456 % 123456, mod_int(from_int(123456, 8), 123456));
+
+        // big pow2
+        self::assertEquals(
+            0xeeff00,
+            mod_int(
+                from_hex('112233445566778899aabbccddeeff00', 16),
+                2 ** 24
+            )
+        );
+    }
+
+    public function testModOverflow64()
+    {
+        if (\PHP_INT_SIZE < 8) {
+            $this->markTestSkipped();
+        }
+
+        $maxDiv = 0x0ffffffffffffff;
+        // skip pow2
+        $overflow = 0x100000000000001;
+
+        self::assertEquals(
+            255,
+            mod_int(
+                from_hex('ffffffffffffffff', 8),
+                $maxDiv
+            )
+        );
+        self::assertEquals(
+            72057594037927680,
+            mod_int(
+                from_hex('ffffffffffffffff', 8),
+                $overflow
+            )
+        );
     }
 
     public function testDivMod()
