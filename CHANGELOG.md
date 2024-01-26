@@ -8,6 +8,7 @@
 
 * Prevent overflow instead of detecting it post-factum
   (this seems to speed up random-polyfill test suite 10% on 32-bit systems)
+* Internal functions and constants moved to the `Internal/` namespace
 
 ### 1.3.1
 
