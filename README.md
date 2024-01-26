@@ -6,6 +6,7 @@
 [![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline/sandfox/unsigned/master.svg?style=flat-square)](https://gitlab.com/sandfox/unsigned/-/pipelines)
 [![Codecov](https://img.shields.io/codecov/c/gl/sandfox/unsigned?style=flat-square)](https://codecov.io/gl/sandfox/unsigned/)
 
+Fixed length unsigned arithmetic emulation for PHP.
 The lib was created as a helper for the random-polyfill.
 
 ## Installation
@@ -19,8 +20,8 @@ composer require 'arokettu/unsigned'
 ```php
 <?php
 use Arokettu\Unsigned as u;
-$a = u\from_int(1234567890123456789, 24);
-$b = u\from_hex('123456789abcdef01234567890abcdef', 24);
+$a = u\from_int(1234567890123456789, 24); // use 24-byte a.k.a. 192-bit arithmetic
+$b = u\from_hex('123456789abcdef01234567890abcdef', 24); // numbers must have same bitness
 // 1234567890123456789 * 0x123456789abcdef01234567890abcdef =
 $c = u\mul($a, $b);
 var_dump(u\to_dec($c)); // 29873897512945703720213152879288233401251320475301467035
