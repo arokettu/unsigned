@@ -2,6 +2,13 @@
 
 ## 1.x
 
+### 1.3.2
+
+*Jan 26, 2024*
+
+* Prevent overflow instead of detecting it post-factum
+  (this seems to speed up random-polyfill test suite 10% on 32-bit systems)
+
 ### 1.3.1
 
 *Jan 25, 2024*
