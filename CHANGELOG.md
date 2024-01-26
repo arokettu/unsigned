@@ -2,11 +2,18 @@
 
 ## 1.x
 
+### 1.3.3
+
+*Jan 26, 2024*
+
+* Implement overflow detection in div_mod_int and mod_int
+* Fix is_bit_set not detecting the lowest bit of the byte (also causes a crash in div_mod)
+
 ### 1.3.2
 
 *Jan 26, 2024*
 
-* Prevent overflow instead of detecting it post-factum
+* Prevent overflow instead of detecting it post-factum in add_int and mul_int
   (this seems to speed up random-polyfill test suite 10% on 32-bit systems)
 * Internal functions and constants moved to the `Internal/` namespace
 
