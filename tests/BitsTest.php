@@ -28,6 +28,23 @@ class BitsTest extends TestCase
         self::assertFalse(is_bit_set($a, 53));
     }
 
+    public function testIsSetBitAllBits()
+    {
+        $bits = 0b1111111111111111;
+        $a = from_int($bits, 2);
+
+        for ($i = 0; $i < 16; $i++) {
+            self::assertTrue(is_bit_set($a, $i));
+        }
+
+        $bits = 0b0000000000000000;
+        $b = from_int($bits, 2);
+
+        for ($i = 0; $i < 16; $i++) {
+            self::assertFalse(is_bit_set($b, $i));
+        }
+    }
+
     public function testIsSetBitUnderflow()
     {
         $this->expectException(\DomainException::class);

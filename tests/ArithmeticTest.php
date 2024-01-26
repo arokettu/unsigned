@@ -252,6 +252,36 @@ class ArithmeticTest extends TestCase
                 from_hex('00000100000000000000000000000000', 16)
             )
         );
+        self::assertEquals(
+            [
+                from_hex('89119', 16),
+                from_hex('1445566778899aabbccddeeff00', 16),
+            ],
+            div_mod(
+                from_hex('112233445566778899aabbccddeeff00', 16),
+                from_hex('00000200000000000000000000000000', 16)
+            )
+        );
+        self::assertEquals(
+            [
+                from_hex('4488c', 16),
+                from_hex('3445566778899aabbccddeeff00', 16),
+            ],
+            div_mod(
+                from_hex('112233445566778899aabbccddeeff00', 16),
+                from_hex('00000400000000000000000000000000', 16)
+            )
+        );
+        self::assertEquals(
+            [
+                from_hex('22446', 16),
+                from_hex('3445566778899aabbccddeeff00', 16),
+            ],
+            div_mod(
+                from_hex('112233445566778899aabbccddeeff00', 16),
+                from_hex('00000800000000000000000000000000', 16)
+            )
+        );
     }
 
     public function testDivDifferentSizes()
