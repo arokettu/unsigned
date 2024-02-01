@@ -353,6 +353,24 @@ class ArithmeticIntTest extends TestCase
         self::assertEquals(0, mod_int($a, $b));
     }
 
+    public function testDivModFromUuid2SameCaseButFor64Bit()
+    {
+        if (PHP_INT_SIZE < 8) {
+            $this->markTestSkipped();
+        }
+
+        $a = from_hex('47f8a5ed517db9349160000', 16);
+        $b = 100000000000000000;
+
+        list($d, $m) = div_mod_int($a, $b);
+
+        self::assertEquals('13921270543', to_dec($d));
+        self::assertEquals(0, $m);
+
+        // also check simple mod
+        self::assertEquals(0, mod_int($a, $b));
+    }
+
     public function testModNoZero()
     {
         $this->expectException(\RangeException::class);
