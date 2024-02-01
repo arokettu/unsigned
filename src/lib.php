@@ -415,7 +415,7 @@ namespace Arokettu\Unsigned
         while ($i--) {
             $m = $a[$i] . $m;
             $chr = 0;
-            while (u\compare($m, $bZero) > 0) {
+            while (u\compare($m, $bZero) >= 0) {
                 $m = u\add($m, $bAdd);
                 $chr++;
             }
