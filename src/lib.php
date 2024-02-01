@@ -702,9 +702,9 @@ namespace Arokettu\Unsigned\Internal
     const MAX_MUL = (\PHP_INT_MAX >> 8) + 1;
     /**
      * @internal
-     * Max dividend that doesn't cause overflow
+     * Max dividend that can be shifted by a byte length without overflowing
      */
-    const MAX_DIV = \PHP_INT_MAX >> 7;
+    const MAX_DIV = \PHP_INT_MAX >> 8;
 
     /**
      * @internal
