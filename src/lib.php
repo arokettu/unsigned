@@ -393,11 +393,14 @@ namespace Arokettu\Unsigned
         }
         // if we're lucky to have a small $b
         if (!$forceSlow && u\fits_into_int($b)) {
-            list($div, $mod) = u\div_mod_int($a, u\to_int($b));
-            return [
-                $div,
-                u\from_int($mod, $sizeof),
-            ];
+            $bi = u\to_int($b);
+            if ($bi <= i\MAX_DIV) {
+                list($div, $mod) = u\div_mod_int($a, u\to_int($b));
+                return [
+                    $div,
+                    u\from_int($mod, $sizeof),
+                ];
+            }
         }
 
         $b = \rtrim($b, "\0"); // only significant bytes
