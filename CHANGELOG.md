@@ -2,6 +2,12 @@
 
 ## 1.x
 
+### 1.3.5
+
+*Feb 1, 2024*
+
+* Fix div_mod edge case when remainder should evaluate to 0
+
 ### 1.3.4
 
 *Feb 1, 2024*
