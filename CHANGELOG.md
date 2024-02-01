@@ -2,6 +2,12 @@
 
 ## 1.x
 
+### 1.3.4
+
+*Feb 1, 2024*
+
+* Fix overflow detection threshold in div_mod_int and mod_int
+
 ### 1.3.3
 
 *Jan 26, 2024*
