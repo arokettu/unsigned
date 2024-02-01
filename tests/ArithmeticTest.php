@@ -282,6 +282,15 @@ class ArithmeticTest extends TestCase
                 from_hex('00000800000000000000000000000000', 16)
             )
         );
+
+        // mod 0
+        self::assertEquals(
+            [from_int(0x100, 16), from_int(0, 16)],
+            div_mod(
+                from_hex('112233445566778899aabbccddeeff00', 16),
+                from_hex('00112233445566778899aabbccddeeff', 16)
+            )
+        );
     }
 
     public function testDivDifferentSizes()
@@ -356,6 +365,15 @@ class ArithmeticTest extends TestCase
             mod(
                 from_hex('112233445566778899aabbccddeeff00', 16),
                 from_hex('00000100000000000000000000000000', 16)
+            )
+        );
+
+        // mod 0
+        self::assertEquals(
+            from_int(0, 16),
+            mod(
+                from_hex('112233445566778899aabbccddeeff00', 16),
+                from_hex('00112233445566778899aabbccddeeff', 16)
             )
         );
     }

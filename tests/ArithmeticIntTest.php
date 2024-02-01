@@ -334,6 +334,23 @@ class ArithmeticIntTest extends TestCase
 
         self::assertEquals('14411518807', to_dec($d));
         self::assertEquals(5855889, $m);
+
+        // also check simple mod
+        self::assertEquals(5855889, mod_int($a, $b));
+    }
+
+    public function testDivModFromUuid2()
+    {
+        $a = from_hex('1ee9537cf605180', 8);
+        $b = 10000000;
+
+        list($d, $m) = div_mod_int($a, $b);
+
+        self::assertEquals('13921270543', to_dec($d));
+        self::assertEquals(0, $m);
+
+        // also check simple mod
+        self::assertEquals(0, mod_int($a, $b));
     }
 
     public function testModNoZero()
