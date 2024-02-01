@@ -15,6 +15,7 @@ use function Arokettu\Unsigned\mod_int;
 use function Arokettu\Unsigned\mul_int;
 use function Arokettu\Unsigned\sub_int;
 use function Arokettu\Unsigned\sub_int_rev;
+use function Arokettu\Unsigned\to_dec;
 use function Arokettu\Unsigned\to_hex;
 use function Arokettu\Unsigned\to_int;
 
@@ -322,6 +323,17 @@ class ArithmeticIntTest extends TestCase
         $this->expectExceptionMessage('$b must be greater than zero. Use div_mod($a, from_int($b)) for unsigned logic');
 
         div_mod_int(from_int(123456, 8), -2);
+    }
+
+    public function testDivModFromUuid()
+    {
+        $a = from_hex('200000000000011', 8);
+        $b = 10000000;
+
+        list($d, $m) = div_mod_int($a, $b);
+
+        self::assertEquals('14411518807', to_dec($d));
+        self::assertEquals(5855889, $m);
     }
 
     public function testModNoZero()
