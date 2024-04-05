@@ -35,7 +35,7 @@ To working string
     :param int $sizeof: Length of the unsigned number in bytes
     :return: Binary string in the form this library accepts
 
-    If ``intval($value) >= $sizeof * 2``, value may be truncated.
+    If ``intval($value) >= 2 ** $sizeof``, value will be truncated.
 
 .. php:function:: from_base(string $value, int $base, int $sizeof): string
 
@@ -46,7 +46,7 @@ To working string
     :param int $sizeof: Length of the unsigned number in bytes
     :return: Binary string in the form this library accepts
 
-    If ``intval($value) >= $sizeof * 2``, value may be truncated.
+    If ``intval($value) >= 2 ** $sizeof``, value will be truncated.
 
 From working string
 ===================
