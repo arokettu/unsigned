@@ -3,7 +3,9 @@
     @see https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-Ruleset
 -->
 <ruleset name="Custom Standard" namespace="MyProject\CS\Standard">
-    <rule ref="SandFox_PHP70"/>
+    <rule ref="SandFox_PHP70">
+        <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint"/>
+    </rule>
     <rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions">
         <properties>
             <!-- Reset to default (include all functions) -->

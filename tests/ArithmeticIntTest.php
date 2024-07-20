@@ -355,7 +355,7 @@ class ArithmeticIntTest extends TestCase
 
     public function testDivModFromUuid2SameCaseButFor64Bit()
     {
-        if (PHP_INT_SIZE < 8) {
+        if (\PHP_INT_SIZE < 8) {
             $this->markTestSkipped();
         }
 
@@ -373,7 +373,7 @@ class ArithmeticIntTest extends TestCase
 
     public function testDivModBigButBFits()
     {
-        if (PHP_INT_SIZE < 8) {
+        if (\PHP_INT_SIZE < 8) {
             $this->markTestSkipped();
         }
 
