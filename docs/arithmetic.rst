@@ -84,7 +84,7 @@ Division
 Comparison
 ==========
 
-.. php:function:: compare(string $a, compare $b): int
+.. php:function:: compare(string $a, string $b): int
 
     ``$a <=> $b``
 
