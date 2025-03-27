@@ -12,7 +12,6 @@ use function Arokettu\Unsigned\div;
 use function Arokettu\Unsigned\div_mod;
 use function Arokettu\Unsigned\from_hex;
 use function Arokettu\Unsigned\from_int;
-use function Arokettu\Unsigned\Internal\_raw_mul32;
 use function Arokettu\Unsigned\mod;
 use function Arokettu\Unsigned\mul;
 use function Arokettu\Unsigned\neg;

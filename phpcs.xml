@@ -5,6 +5,8 @@
 <ruleset name="Custom Standard" namespace="MyProject\CS\Standard">
     <rule ref="SandFox_PHP70">
         <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint"/>
+        <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps"/>
+        <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
     </rule>
     <rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions">
         <properties>
@@ -13,7 +15,6 @@
         </properties>
     </rule>
     <rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalConstants"/>
-    <config name="testVersion" value="7.0-"/>
     <file>src</file>
     <file>tests</file>
 </ruleset>
