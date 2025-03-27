@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Arokettu\Unsigned;
 
+/**
+ * @internal
+ */
 final class Unsigned
 {
     public static function from_int(int $value, int $sizeof): string
