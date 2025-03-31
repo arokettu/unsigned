@@ -1,7 +1,13 @@
+# ide
 /.idea
+
+# composer
 /vendor
 /composer.lock
+
+# debug & tests
 /debug
 /docs/build
 /reports
 /.phpunit.result.cache
+/infection.json5
