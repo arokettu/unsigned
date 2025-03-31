@@ -347,7 +347,12 @@ final class Unsigned
      *
      * @return array [div -> string, mod -> string]
      */
-    public static function div_mod(string $a, string $b, bool $forceSlow = false): array
+    public static function div_mod(string $a, string $b): array
+    {
+        return self::_raw_div_mod($a, $b);
+    }
+
+    private static function _raw_div_mod(string $a, string $b, bool $forceSlow = false): array
     {
         $sizeof = \strlen($a);
         $sizeofb = \strlen($b);
@@ -463,7 +468,7 @@ final class Unsigned
         }
         // catch possible overflow
         if ($b > self::_MAX_DIV) {
-            $divmod = self::div_mod($a, self::from_int($b, $sizeof), true);
+            $divmod = self::_raw_div_mod($a, self::from_int($b, $sizeof), true);
             return [$divmod[0], self::to_int($divmod[1])];
         }
 
@@ -580,7 +585,7 @@ final class Unsigned
         }
         // catch possible overflow
         if ($b > self::_MAX_DIV) {
-            return self::to_int(self::div_mod($a, self::from_int($b, $sizeof), true)[1]);
+            return self::to_int(self::_raw_div_mod($a, self::from_int($b, $sizeof), true)[1]);
         }
 
         $mod = 0;
