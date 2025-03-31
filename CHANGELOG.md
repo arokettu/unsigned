@@ -2,6 +2,15 @@
 
 ## 1.x
 
+### 1.3.6
+
+*Apr 1, 2025*
+
+* Moved internal implementations into a static class
+  * Avoids loading of functions when they are not used
+  * Eases quality control like mutation testing
+* Fixed internal $forceSlow exposed to a public signature
+
 ### 1.3.5
 
 *Feb 1, 2024*
