@@ -241,7 +241,7 @@ class ImportExportTest extends TestCase
             throw new \LogicException('The future arrived! Update tests!');
         }
 
-        self::assertTrue(fits_into_int("\1\1\1\1\1\1\1\1"));
+        self::assertEquals(\PHP_INT_SIZE > 4, fits_into_int("\1\1\1\1\1\1\1\1")); // fits in 64 , doesn't in 32
         self::assertFalse(fits_into_int("\1\1\1\1\1\1\1\1\1"));
         self::assertFalse(fits_into_int("\1\1\1\1\1\1\1\xff"));
     }
