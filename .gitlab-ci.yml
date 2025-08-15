@@ -49,8 +49,7 @@ test:
   parallel:
     matrix:
       - PHP_VERSION:
-          - '7.2' # lowest (that builds properly)
-          - '7.3'
+          - '7.3' # lowest (that builds properly)
           - '7.4' # latest 7
           - '8.0'
           - '8.1'
